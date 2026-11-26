@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#214b36" />
+    <meta
+      name="description"
+      content="Концепт Health Food: готовые рационы с доставкой в Алматы. Выберите программу, познакомьтесь с меню и рассчитайте стоимость питания."
+    />
+    <title>Health Food — хорошая еда. Хороший день.</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link
+      rel="preload"
+      as="image"
+      href="./assets/hero.jpg"
+      fetchpriority="high"
+    />
+    <link rel="stylesheet" href="./assets/fonts.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+    <div class="announcement">
+      <span>Меньше готовки. Больше жизни.</span
+      ><span class="announcement-detail"
+        >Готовые рационы с доставкой по Алматы
+        <svg class="icon" aria-hidden="true"><use href="#i-leaf" /></svg
+      ></span>
+    </div>
+    <header class="header">
+      <div class="container header-inner">
+        <a class="brand" href="#" aria-label="Health Food — на главную"
+          ><svg class="brand-symbol" viewBox="0 0 48 48" aria-hidden="true">
+            <path
+              d="M24 43V24C24 10 34 5 44 5c0 14-5 23-20 23M24 35C10 35 4 26 4 13c11 0 20 6 20 18"
+            /></svg
+          ><span
+            >health<span class="brand-second"
+              >food<span class="brand-dot">.</span></span
+            ></span
+          ></a
+        >
+        <nav class="desktop-nav" aria-label="Основная навигация">
+          <a href="#programs">Программы</a><a href="#menu">Наше меню</a
+          ><a href="#how-it-works">Как это работает</a
+          ><a href="#faq">Вопросы</a>
+        </nav>
+        <div class="header-actions">
+          <span class="location"
+            ><svg class="icon" aria-hidden="true"><use href="#i-pin" /></svg
+            >Алматы</span
+          ><button class="button button-small" data-quiz>
+            Подобрать рацион</button
+          ><button
+            class="menu-toggle icon-button"
+            aria-label="Открыть меню"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <svg class="icon" aria-hidden="true"><use href="#i-menu" /></svg>
+          </button>
+        </div>
+      </div>
+      <nav
+        id="mobile-nav"
+        class="mobile-nav"
+        aria-label="Мобильная навигация"
+        hidden
+      >
+        <a href="#programs">Программы питания</a
+        ><a href="#menu">Меню на неделю</a
+        ><a href="#how-it-works">Как это работает</a
+        ><a href="#faq">Частые вопросы</a
+        ><button class="button" data-quiz>Помогите выбрать рацион</button>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <span class="eyebrow-line"></span>Здоровое питание в твоём ритме
+            </div>
+            <h1>
+              Хорошая еда.<br />Хороший
+              <span class="hand-underline"
+                >день.<svg viewBox="0 0 270 22" aria-hidden="true">
+                  <path
+                    d="M4 15C81 2 177 1 263 11M36 20C106 11 174 11 231 15"
+                  /></svg
+              ></span>
+            </h1>
+            <p class="hero-description">
+              Мы готовим, считаем калории и доставляем.<br
+                class="desktop-break"
+              />
+              Ты — ешь вкусно и находишь время на себя.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-large" href="#programs"
+                >Выбрать свою программу<svg class="icon" aria-hidden="true">
+                  <use href="#i-leaf" /></svg></a
+              ><a class="text-button" href="#menu"
+                ><span class="play-icon"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-utensils" /></svg></span
+                >А что в меню?</a
+              >
+            </div>
+            <div class="hero-note">
+              <svg class="icon" aria-hidden="true"><use href="#i-check" /></svg
+              >Начни с пробного дня. Без подписки.
+            </div>
+            <div class="hero-bottom">
+              <span><strong>5 приёмов</strong>пищи на каждый день</span
+              ><span><strong>900–2 500 ккал</strong>под твою цель</span
+              ><span><strong>06:00–10:00</strong>доставка до двери</span>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <span class="hero-orbit" aria-hidden="true"></span
+            ><span class="hero-spark spark-one" aria-hidden="true">✳</span
+            ><span class="hero-spark spark-two" aria-hidden="true">✳</span>
+            <div class="hero-photo-wrap">
+              <img
+                class="hero-photo"
+                src="./assets/hero.jpg"
+                width="1400"
+                height="933"
+                alt="Яркий боул со свежими овощами, нутом, авокадо и зеленью"
+                fetchpriority="high"
+              />
+            </div>
+            <div class="hero-stamp">
+              <svg class="icon" aria-hidden="true"><use href="#i-leaf" /></svg
+              ><span
+                >Вкусно.<br />С балансом.<br /><strong>Для тебя.</strong></span
+              >
+            </div>
+            <div class="floating-card">
+              <span class="floating-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-bag" /></svg></span
+              ><span
+                ><strong>Твой день уже приготовлен</strong
+                ><span>Осталось только разогреть</span></span
+              ><span class="floating-check"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-check" /></svg
+              ></span>
+            </div>
+            <span class="photo-caption"
+              >Больше цвета в тарелке. Больше энергии в дне.</span
+            >
+          </div>
+        </div>
+      </section>
+      <div class="benefit-strip">
+        <div class="container benefit-inner">
+          <span
+            ><svg class="icon" aria-hidden="true"><use href="#i-chef" /></svg
+            >Готовят повара</span
+          ><span class="strip-star" aria-hidden="true">✳</span
+          ><span
+            ><svg class="icon" aria-hidden="true"><use href="#i-leaf" /></svg
+            >Понятный состав</span
+          ><span class="strip-star" aria-hidden="true">✳</span
+          ><span
+            ><svg class="icon" aria-hidden="true"><use href="#i-truck" /></svg
+            >Доставка включена</span
+          ><span class="strip-star" aria-hidden="true">✳</span
+          ><span
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-utensils" /></svg
+            >Новое меню каждый день</span
+          >
+        </div>
+      </div>
+
+      <section class="section programs-section" id="programs">
+        <div class="container">
+          <div class="section-top">
+            <div>
+              <span class="eyebrow">Еда, которая подходит тебе</span>
+              <h2>Твои цели. <span class="muted-green">Наша кухня.</span></h2>
+            </div>
+            <p class="section-description">
+              Выбери свой ритм —<br />обо всём остальном позаботимся мы.
+            </p>
+          </div>
+          <div class="program-layout">
+            <div
+              class="program-choices"
+              role="group"
+              aria-label="Выберите программу питания"
+            >
+              <button
+                class="program-choice"
+                data-program="light"
+                aria-pressed="false"
+              >
+                <span class="program-emoji light-icon"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-leaf" /></svg></span
+                ><span class="program-label"
+                  ><span class="program-name">Лёгкость</span
+                  ><span>Для снижения веса</span></span
+                ><span class="program-kcal">900–1 400 ккал</span
+                ><span class="radio-indicator"></span>
+              </button>
+              <button
+                class="program-choice is-selected"
+                data-program="balance"
+                aria-pressed="true"
+              >
+                <span class="program-emoji balance-icon"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-sun" /></svg></span
+                ><span class="program-label"
+                  ><span class="program-name"
+                    >Баланс
+                    <span class="mini-label">Выбор на каждый день</span></span
+                  ><span>Для поддержания формы</span></span
+                ><span class="program-kcal">1 500–1 900 ккал</span
+                ><span class="radio-indicator"></span>
+              </button>
+              <button
+                class="program-choice"
+                data-program="power"
+                aria-pressed="false"
+              >
+                <span class="program-emoji power-icon"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-zap" /></svg></span
+                ><span class="program-label"
+                  ><span class="program-name">Энергия</span
+                  ><span>Для активного ритма и набора массы</span></span
+                ><span class="program-kcal">2 000–2 500 ккал</span
+                ><span class="radio-indicator"></span>
+              </button>
+              <div class="program-help">
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-sparkles" />
+                </svg>
+                <p>
+                  Пока не знаешь, что выбрать?<br /><button
+                    class="inline-button"
+                    data-quiz
+                  >
+                    Подберём программу за минуту
+                  </button>
+                </p>
+              </div>
+            </div>
+            <div class="plan-card" aria-live="polite" aria-atomic="true">
+              <div class="plan-card-top">
+                <span class="plan-overline">Твоя программа</span
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-leaf" />
+                </svg>
+              </div>
+              <h3 id="plan-name">Баланс</h3>
+              <span class="plan-calories" id="plan-calories"
+                >1 500–1 900 ккал</span
+              >
+              <p id="plan-description">
+                Полноценное питание, чтобы чувствовать себя в своей тарелке.
+              </p>
+              <div class="plan-features">
+                <span
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-check" /></svg
+                  ><span id="plan-meals">5 приёмов пищи</span></span
+                ><span
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-check" /></svg
+                  >Доставка включена</span
+                >
+              </div>
+              <div
+                class="duration-control"
+                role="group"
+                aria-label="Количество дней"
+              >
+                <button
+                  data-duration="1"
+                  aria-pressed="true"
+                  class="is-selected"
+                >
+                  1 день</button
+                ><button data-duration="5" aria-pressed="false">5 дней</button
+                ><button data-duration="20" aria-pressed="false">
+                  20 дней
+                </button>
+              </div>
+              <div class="price-line">
+                <span
+                  ><strong id="plan-price">11 100 ₸</strong
+                  ><span> / день</span></span
+                ><span class="plan-days-label" id="plan-days-label"
+                  >Пробный день</span
+                >
+              </div>
+              <div class="total-line">
+                <span id="plan-total-label">Итого за 1 день</span
+                ><strong id="plan-total">11 100 ₸</strong>
+              </div>
+              <button class="button button-lime button-full" data-order>
+                Попробовать программу<svg class="icon" aria-hidden="true">
+                  <use href="#i-bag" />
+                </svg></button
+              ><span class="plan-caption">Можно начать с одного дня</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section menu-section" id="menu">
+        <div class="container">
+          <div class="section-top">
+            <div>
+              <span class="eyebrow">Знакомься, твой вкусный день</span>
+              <h2>
+                Правильное питание.<br /><span class="muted-green"
+                  >Без «опять гречка».</span
+                >
+              </h2>
+            </div>
+            <div class="menu-top-right">
+              <p class="section-description">
+                Любимые вкусы, новые сочетания.<br />Вот как может выглядеть
+                твой рацион.
+              </p>
+              <span class="demo-label">Пример меню · программа «Баланс»</span>
+            </div>
+          </div>
+          <div class="menu-toolbar">
+            <div class="day-tabs" role="tablist" aria-label="День меню">
+              <button
+                role="tab"
+                id="day-tab-0"
+                aria-controls="day-menu"
+                aria-selected="true"
+                data-day="0"
+              >
+                Понедельник</button
+              ><button
+                role="tab"
+                id="day-tab-1"
+                aria-controls="day-menu"
+                aria-selected="false"
+                tabindex="-1"
+                data-day="1"
+              >
+                Вторник</button
+              ><button
+                role="tab"
+                id="day-tab-2"
+                aria-controls="day-menu"
+                aria-selected="false"
+                tabindex="-1"
+                data-day="2"
+              >
+                Среда</button
+              ><button
+                role="tab"
+                id="day-tab-3"
+                aria-controls="day-menu"
+                aria-selected="false"
+                tabindex="-1"
+                data-day="3"
+              >
+                Четверг</button
+              ><button
+                role="tab"
+                id="day-tab-4"
+                aria-controls="day-menu"
+                aria-selected="false"
+                tabindex="-1"
+                data-day="4"
+              >
+                Пятница
+              </button>
+            </div>
+            <span class="daily-total" id="daily-total">1 700 ккал за день</span>
+          </div>
+          <div
+            class="meal-grid"
+            id="day-menu"
+            role="tabpanel"
+            aria-labelledby="day-tab-0"
+            tabindex="0"
+          ></div>
+          <div class="menu-footnote">
+            <span
+              ><svg class="icon" aria-hidden="true"><use href="#i-leaf" /></svg
+              >Фото и меню — примеры для знакомства с концептом.</span
+            ><button class="inline-button" data-quiz>Хочу такой рацион</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section how-section" id="how-it-works">
+        <div class="container">
+          <div class="section-top">
+            <div>
+              <span class="eyebrow">Всё уже продумано</span>
+              <h2>
+                Забота о себе — <span class="muted-green">это просто.</span>
+              </h2>
+            </div>
+          </div>
+          <div class="steps-grid">
+            <article class="step">
+              <span class="step-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-utensils" /></svg
+              ></span>
+              <h3>Выбираешь свой рацион</h3>
+              <p>
+                Определись с целью и количеством дней. Можно начать с пробного
+                дня.
+              </p>
+            </article>
+            <article class="step">
+              <span class="step-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-chef" /></svg
+              ></span>
+              <h3>Мы готовим ночью</h3>
+              <p>
+                Свежие продукты, продуманное меню и готовые порции на весь день.
+              </p>
+            </article>
+            <article class="step">
+              <span class="step-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-truck" /></svg
+              ></span>
+              <h3>Привозим к твоему утру</h3>
+              <p>
+                Доставка домой или в офис с 06:00 до 10:00. Ты выбираешь удобное
+                время.
+              </p>
+            </article>
+            <article class="step">
+              <span class="step-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-heart" /></svg
+              ></span>
+              <h3>Живёшь свою жизнь</h3>
+              <p>
+                Разогрей блюдо и наслаждайся. Без магазинов, готовки и горы
+                посуды.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section">
+        <div class="container story-grid">
+          <div class="story-photo">
+            <img
+              src="./assets/ingredients.jpg"
+              width="1200"
+              height="800"
+              alt="Разнообразие свежих овощей, зелени и ингредиентов для сбалансированных блюд"
+              loading="lazy"
+            /><span class="story-photo-label"
+              ><svg class="icon" aria-hidden="true"><use href="#i-leaf" /></svg
+              >Всё начинается с хороших продуктов</span
+            >
+          </div>
+          <div class="story-copy">
+            <span class="eyebrow">Наша философия</span>
+            <h2>
+              Не диета.<br />Просто
+              <span class="muted-green">вкусная <br />привычка.</span>
+            </h2>
+            <p>
+              Еда должна приносить удовольствие. Поэтому мы за разнообразие,
+              знакомые продукты и баланс — без строгих запретов и скучных
+              тарелок.
+            </p>
+            <p>
+              Освободи время для того, что любишь.<br />А завтрак, обед и ужин
+              оставь нам.
+            </p>
+            <a class="button button-outline" href="#programs"
+              >Найти свою программу</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="section faq-section" id="faq">
+        <div class="container faq-grid">
+          <div>
+            <span class="eyebrow">Давай разберёмся</span>
+            <h2>
+              Хорошие вопросы.<br /><span class="muted-green"
+                >Честные ответы.</span
+              >
+            </h2>
+            <p class="faq-intro">
+              Чтобы первый заказ был<br />таким же лёгким, как наш завтрак.
+            </p>
+          </div>
+          <div class="faq-list">
+            <details open>
+              <summary>
+                Можно попробовать только один день?<svg
+                  class="icon"
+                  aria-hidden="true"
+                >
+                  <use href="#i-plus" />
+                </svg>
+              </summary>
+              <p>
+                Да. Выбери программу и период «1 день», чтобы познакомиться с
+                форматом. Длительный курс можно выбрать позже.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Когда и куда вы доставляете?<svg
+                  class="icon"
+                  aria-hidden="true"
+                >
+                  <use href="#i-plus" />
+                </svg>
+              </summary>
+              <p>
+                На исходном сайте Health Food указана ежедневная доставка по
+                Алматы с 06:00 до 10:00. Точный адрес, зону и время доставки
+                нужно согласовать с менеджером перед оплатой.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Что, если у меня аллергия на продукт?<svg
+                  class="icon"
+                  aria-hidden="true"
+                >
+                  <use href="#i-plus" />
+                </svg>
+              </summary>
+              <p>
+                Сообщи об аллергиях и ограничениях до оформления заказа.
+                Возможность замены и риск следов аллергенов необходимо уточнить
+                на кухне. Примеры меню на этой странице не являются
+                индивидуальной рекомендацией.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Нужно ли что-то готовить?<svg class="icon" aria-hidden="true">
+                  <use href="#i-plus" />
+                </svg>
+              </summary>
+              <p>
+                Блюда приезжают готовыми. Следуй инструкции на упаковке: для
+                горячих блюд обычно достаточно разогрева. Храни рацион в
+                холодильнике и учитывай срок годности на этикетке.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Как выбрать программу питания?<svg
+                  class="icon"
+                  aria-hidden="true"
+                >
+                  <use href="#i-plus" />
+                </svg>
+              </summary>
+              <p>
+                Начни со своей цели: снижение веса, поддержание формы или
+                активный ритм. Наш короткий подборщик поможет сориентироваться в
+                программах. Для индивидуального подбора калорийности обратись к
+                специалисту.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div class="container cta-inner">
+          <div>
+            <span class="eyebrow">Самое время позаботиться о себе</span>
+            <h2>Пусть завтра будет<br />на один вкусный день лучше.</h2>
+            <p>Начни с пробного рациона. Остальное мы уже придумали.</p>
+          </div>
+          <div class="cta-action">
+            <button class="button button-lime button-large" data-order>
+              Попробовать один день<svg class="icon" aria-hidden="true">
+                <use href="#i-leaf" />
+              </svg></button
+            ><span>Доставка по Алматы включена</span>
+          </div>
+          <span class="cta-decoration" aria-hidden="true">✳</span>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-top">
+          <a class="brand" href="#" aria-label="Health Food — наверх"
+            ><svg class="brand-symbol" viewBox="0 0 48 48" aria-hidden="true">
+              <path
+                d="M24 43V24C24 10 34 5 44 5c0 14-5 23-20 23M24 35C10 35 4 26 4 13c11 0 20 6 20 18"
+              /></svg
+            ><span
+              >health<span class="brand-second"
+                >food<span class="brand-dot">.</span></span
+              ></span
+            ></a
+          >
+          <p>Еда с заботой.<br />Время для жизни.</p>
+          <nav aria-label="Ссылки в подвале">
+            <a href="#programs">Программы</a><a href="#menu">Меню</a
+            ><a href="#faq">Вопросы</a>
+          </nav>
+          <span class="footer-city"
+            ><svg class="icon" aria-hidden="true"><use href="#i-pin" /></svg>С
+            любовью к Алматы</span
+          >
+        </div>
+        <div class="footer-bottom">
+          <span
+            >© <span id="current-year">2026</span> Health Food · Концепт нового
+            сайта</span
+          ><span>Демонстрационная версия. Реальные заказы не принимаются.</span
+          ><button class="inline-button" data-privacy>
+            Конфиденциальность
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <dialog
+      id="quiz-dialog"
+      class="modal quiz-modal"
+      aria-labelledby="quiz-title"
+    >
+      <button
+        class="modal-close icon-button"
+        data-close
+        aria-label="Закрыть подбор программы"
+      >
+        <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+      </button>
+      <div id="quiz-content"></div>
+    </dialog>
+    <dialog
+      id="meal-dialog"
+      class="modal meal-modal"
+      aria-labelledby="meal-title"
+    >
+      <button
+        class="modal-close icon-button"
+        data-close
+        aria-label="Закрыть состав блюда"
+      >
+        <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+      </button>
+      <div id="meal-content"></div>
+    </dialog>
+    <dialog
+      id="order-dialog"
+      class="modal order-modal"
+      aria-labelledby="order-title"
+    >
+      <button
+        class="modal-close icon-button"
+        data-close
+        aria-label="Закрыть заказ"
+      >
+        <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+      </button>
+      <div id="order-content"></div>
+    </dialog>
+    <dialog id="privacy-dialog" class="modal" aria-labelledby="privacy-title">
+      <button
+        class="modal-close icon-button"
+        data-close
+        aria-label="Закрыть информацию"
+      >
+        <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg></button
+      ><span class="eyebrow">О твоих данных</span>
+      <h2 id="privacy-title">Конфиденциальность</h2>
+      <p>
+        Это демонстрационный сайт. Данные из формы используются только в текущей
+        вкладке для подготовки черновика заказа. Они не отправляются на сервер и
+        не сохраняются в браузере после перезагрузки.
+      </p>
+      <p>
+        Скачанный черновик содержит введённые тобой данные. Удаляй его, когда он
+        больше не нужен.
+      </p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <svg
+      class="svg-sprite"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-leaf" viewBox="0 0 24 24">
+          <path
+            d="M20 3c1 9-1 15-8 15a7 7 0 0 1-7-7c0-7 7-8 15-8ZM4 21 15 10M8 17v-5M11 14h5"
+          />
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24">
+          <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="2.5" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="m5 12 4 4L19 6" />
+        </symbol>
+        <symbol id="i-bag" viewBox="0 0 24 24">
+          <path d="M4 7h16l1 14H3L4 7ZM8 8V6a4 4 0 0 1 8 0v2" />
+        </symbol>
+        <symbol id="i-chef" viewBox="0 0 24 24">
+          <path
+            d="M7 15a5 5 0 1 1-1-10 6 6 0 0 1 12 0 5 5 0 1 1-1 10v6H7v-6ZM7 17h10M10 11v3M14 11v3"
+          />
+        </symbol>
+        <symbol id="i-utensils" viewBox="0 0 24 24">
+          <path d="M4 3v6a3 3 0 0 0 6 0V3M7 3v18M20 21V3c-4 2-5 8-4 11h4" />
+        </symbol>
+        <symbol id="i-truck" viewBox="0 0 24 24">
+          <path d="M1 4h13v13H1V4ZM14 8h4l4 5v4h-8" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="18" r="3" />
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path
+            d="M12 1v2M12 21v2M1 12h2M21 12h2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+          />
+        </symbol>
+        <symbol id="i-zap" viewBox="0 0 24 24">
+          <path d="m13 2-9 12h7l-1 8L21 9h-8l1-7Z" />
+        </symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24">
+          <path
+            d="M20.5 4.5a5 5 0 0 0-7 0L12 6l-1.5-1.5a5 5 0 0 0-7 7L12 21l8.5-9.5a5 5 0 0 0 0-7Z"
+          />
+        </symbol>
+        <symbol id="i-sparkles" viewBox="0 0 24 24">
+          <path
+            d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3ZM21 1v4M19 3h4M3 19v4M1 21h4"
+          />
+        </symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14" />
+        </symbol>
+        <symbol id="i-x" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M18 6 6 18" />
+        </symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </symbol>
+      </defs>
+    </svg>
+  </body>
+</html>
