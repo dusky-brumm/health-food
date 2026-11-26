@@ -223,29 +223,31 @@ $(".day-tabs").addEventListener("keydown", (event) => {
   }
 });
 
-let lastFocusedElement;
 function openModal(dialog) {
-  lastFocusedElement = document.activeElement;
   dialog.showModal();
-  document.body.classList.add("modal-open");
 }
 $$("dialog").forEach((dialog) => {
   $("[data-close]", dialog).addEventListener("click", () => dialog.close());
-  dialog.addEventListener("click", (event) => {
-    if (event.target !== dialog) return;
+  if ("closedBy" in HTMLDialogElement.prototype) {
+    dialog.closedBy = "any";
+    return;
+  }
+  const isOutside = (event) => {
     const box = dialog.getBoundingClientRect();
-    if (
+    return (
       event.clientX < box.left ||
       event.clientX > box.right ||
       event.clientY < box.top ||
       event.clientY > box.bottom
-    )
-      dialog.close();
+    );
+  };
+  let pressedOutside = false;
+  dialog.addEventListener("pointerdown", (event) => {
+    pressedOutside = isOutside(event);
   });
-  dialog.addEventListener("close", () => {
-    if (!$("dialog[open]")) document.body.classList.remove("modal-open");
-    if (lastFocusedElement?.isConnected)
-      lastFocusedElement.focus({ preventScroll: true });
+  dialog.addEventListener("pointerup", (event) => {
+    if (pressedOutside && isOutside(event)) dialog.close();
+    pressedOutside = false;
   });
 });
 $("#day-menu").addEventListener("click", (event) => {
@@ -253,10 +255,10 @@ $("#day-menu").addEventListener("click", (event) => {
   if (!button) return;
   const meal = mealsForDay(state.day)[Number(button.dataset.meal)];
   $("#meal-content").innerHTML =
-    `<img class="meal-detail-photo" src="./assets/${meal.photo}" alt="${meal.name}"><div class="meal-detail-body"><span class="eyebrow">${meal.type} · ${meal.weight}</span><h2 id="meal-title">${meal.name}</h2><div class="macro-grid"><div><strong>${meal.kcal}</strong><span>ккал</span></div><div><strong>${meal.protein} г</strong><span>Белки</span></div><div><strong>${meal.fat} г</strong><span>Жиры</span></div><div><strong>${meal.carbs} г</strong><span>Углеводы</span></div></div><h3>Что внутри</h3><p>${meal.ingredients}</p><h3>Аллергены</h3><p>${meal.allergens}</p><p class="small-note">Пример блюда для демонстрации сайта. Фото иллюстративное, состав и пищевая ценность ориентировочные. Фактическое меню нужно подтвердить у кухни.</p><button class="button button-full" id="meal-select-plan">Выбрать программу питания</button></div>`;
+    `<img class="meal-detail-photo" width="700" height="389" src="./assets/${meal.photo}" alt="${meal.name}"><div class="meal-detail-body"><span class="eyebrow">${meal.type} · ${meal.weight}</span><h2 id="meal-title">${meal.name}</h2><div class="macro-grid"><div><strong>${meal.kcal}</strong><span>ккал</span></div><div><strong>${meal.protein} г</strong><span>Белки</span></div><div><strong>${meal.fat} г</strong><span>Жиры</span></div><div><strong>${meal.carbs} г</strong><span>Углеводы</span></div></div><h3>Что внутри</h3><p>${meal.ingredients}</p><h3>Аллергены</h3><p>${meal.allergens}</p><p class="small-note">Пример блюда для демонстрации сайта. Фото иллюстративное, состав и пищевая ценность ориентировочные. Фактическое меню нужно подтвердить у кухни.</p><button class="button button-full" id="meal-select-plan">Выбрать программу питания</button></div>`;
   $("#meal-select-plan").addEventListener("click", () => {
     $("#meal-dialog").close();
-    $("#programs").scrollIntoView({ behavior: "smooth" });
+    $("#programs").scrollIntoView({ behavior: "auto" });
   });
   openModal($("#meal-dialog"));
 });
@@ -346,7 +348,7 @@ function renderQuiz() {
       state.duration = Number(quiz.duration);
       updatePlan();
       $("#quiz-dialog").close();
-      $("#programs").scrollIntoView({ behavior: "smooth" });
+      $("#programs").scrollIntoView({ behavior: "auto" });
       showToast(`Программа «${plan.name}» выбрана`);
     });
   } else {
@@ -402,7 +404,7 @@ function renderOrder() {
   const plan = plans[state.program];
   const date = earliestDate();
   $("#order-content").innerHTML =
-    `<span class="eyebrow">Хорошее начало</span><h2 id="order-title">Твой вкусный план</h2><p>Собери черновик заказа. Проверь детали — и сохрани его себе.</p><div class="order-summary"><div><strong>${plan.name} · ${daysText(state.duration)}</strong><span>${plan.kcal} · доставка включена</span></div><strong>${money(plan.price * state.duration)}</strong></div><form class="order-form" id="order-form"><div class="field-row"><div class="field"><label for="order-name">Как тебя зовут</label><input id="order-name" name="name" autocomplete="given-name" placeholder="Имя" required maxlength="60"></div><div class="field"><label for="order-phone">Телефон</label><input id="order-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required maxlength="25" aria-describedby="phone-error"><span class="form-error" id="phone-error" hidden>Укажи номер из 11 цифр, начинающийся с +7 или 8.</span></div></div><div class="field"><label for="order-address">Адрес доставки в Алматы</label><input id="order-address" name="address" autocomplete="street-address" placeholder="Улица, дом, квартира" required maxlength="200"></div><div class="field-row"><div class="field"><label for="order-date">Первый день питания</label><input id="order-date" name="date" type="date" min="${date}" value="${date}" required></div><div class="field"><label for="order-time">Время доставки</label><select id="order-time" name="time"><option>06:00–08:00</option><option>08:00–10:00</option></select></div></div><div class="field"><label for="order-comment">Что нужно учесть <span class="optional-label">(необязательно)</span></label><textarea id="order-comment" name="comment" placeholder="Пожелания, продукты, которые не любишь" maxlength="500"></textarea></div><div class="form-note">Это демоверсия. Данные не отправляются на кухню, заказ и доставка не оформляются. Можно скачать черновик.</div><button class="button button-full" type="submit">Подготовить заказ ${icon("check")}</button><p class="small-note">Данные остаются только в текущей вкладке. Оплата не требуется.</p></form>`;
+    `<span class="eyebrow">Хорошее начало</span><h2 id="order-title">Твой вкусный план</h2><p>Собери черновик заказа. Проверь детали — и сохрани его себе.</p><div class="order-summary"><div><strong>${plan.name} · ${daysText(state.duration)}</strong><span>${plan.kcal} · доставка включена</span></div><strong>${money(plan.price * state.duration)}</strong></div><form class="order-form" id="order-form"><div class="field-row"><div class="field"><label for="order-name">Как тебя зовут</label><input id="order-name" name="name" autocomplete="given-name" placeholder="Имя" required maxlength="60"></div><div class="field"><label for="order-phone">Телефон</label><input id="order-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required maxlength="25" aria-describedby="phone-error"><span class="form-error" id="phone-error" aria-live="polite" hidden>Укажи номер из 11 цифр, начинающийся с +7 или 8.</span></div></div><div class="field"><label for="order-address">Адрес доставки в Алматы</label><input id="order-address" name="address" autocomplete="street-address" placeholder="Улица, дом, квартира" required maxlength="200"></div><div class="field-row"><div class="field"><label for="order-date">Первый день питания</label><input id="order-date" name="date" type="date" min="${date}" value="${date}" required></div><div class="field"><label for="order-time">Время доставки</label><select id="order-time" name="time"><option>06:00–08:00</option><option>08:00–10:00</option></select></div></div><div class="field"><label for="order-comment">Что нужно учесть <span class="optional-label">(необязательно)</span></label><textarea id="order-comment" name="comment" placeholder="Пожелания, продукты, которые не любишь" maxlength="500"></textarea></div><div class="form-note">Это демоверсия. Данные не отправляются на кухню, заказ и доставка не оформляются. Можно скачать черновик.</div><button class="button button-full" type="submit">Подготовить заказ ${icon("check")}</button><p class="small-note">Данные остаются только в текущей вкладке. Оплата не требуется.</p></form>`;
   const phone = $("#order-phone");
   phone.addEventListener("input", () => {
     phone.setCustomValidity("");

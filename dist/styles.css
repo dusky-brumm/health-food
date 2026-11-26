@@ -19,14 +19,10 @@
   box-sizing: border-box;
 }
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 105px;
 }
 body {
   margin: 0;
-}
-body.modal-open {
-  overflow: hidden;
 }
 button,
 input,
@@ -901,7 +897,10 @@ h2 {
   border-radius: 7px;
   font-size: 0.75rem;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 .day-tabs button[aria-selected="true"] {
   background: var(--green);
@@ -1304,9 +1303,11 @@ h2 {
 .modal::backdrop {
   background: #152b237d;
   backdrop-filter: blur(5px);
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
-.modal[open] {
-  animation: modal-in 0.22s ease-out;
+.modal:modal {
+  overscroll-behavior: contain;
 }
 .modal-close {
   position: absolute;
@@ -2558,16 +2559,28 @@ h2 {
     font-size: 1.5rem;
   }
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
-  *,
-  *:before,
-  *:after {
-    animation: none !important;
-    transition: none !important;
+  .modal[open] {
+    animation: modal-in 0.22s ease-out;
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .program-choice,
+  .meal-card,
+  .meal-image img,
+  .faq-list summary .icon,
+  .toast {
+    transition-property:
+      background-color, border-color, color, opacity, box-shadow;
+  }
+  .toast {
+    transform: translate(-50%, 0);
+  }
+  .meal-card:hover img,
   .meal-card:hover,
   .program-choice:hover,
   .button:hover {
