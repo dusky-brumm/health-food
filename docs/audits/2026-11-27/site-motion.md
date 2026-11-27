@@ -2,6 +2,8 @@
 
 27 November 2026
 
+Motion was subsequently reduced on 28 November; see [the updated verification](../2026-11-28/quieter-motion.md).
+
 The homepage and three program pages now share the carousel's opposing title wipes, circular photo entrances and unfolding lime bands. Section effects reverse on exit and replay on return. Cards enter in a short sequence, photos and action arrows respond to hover, and changed prices and weekly menu items receive a separate reveal. All effects are finite. The original carousel retains its existing animation controller.
 
 Native Web Animations and IntersectionObserver handle the added effects. A reduced-motion preference cancels current effects, disconnects the observer and restores visible content. Keyboard focus finishes the containing section's entry immediately. A failed animation API also leaves content visible. No new runtime dependency was added.

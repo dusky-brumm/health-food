@@ -1679,9 +1679,11 @@ a:hover {
   }
 }
 
-/* The reveal effects share the carousel's wipes and orbital movement. */
-.hf-motion-pending {
-  opacity: 0;
+/* Section accents retain the carousel's style; cards stay static. */
+@media (prefers-reduced-motion: no-preference) {
+  .hf-motion-pending {
+    opacity: 0;
+  }
 }
 .hf-motion-title {
   position: relative;
@@ -1708,33 +1710,4 @@ a:hover {
 }
 [data-plan-total], #plan-price, #plan-total {
   display: inline-block;
-}
-.button > span[aria-hidden], .hf-text-link > span[aria-hidden] {
-  display: inline-block;
-}
-@media (prefers-reduced-motion: no-preference) and (hover: hover) {
-  .hf-price-card, .hf-review, .hf-team-card, .hf-article, .hf-other-grid > a {
-    transition: translate 280ms cubic-bezier(.22, 1, .36, 1);
-  }
-  .hf-price-card:hover, .hf-review:hover, .hf-team-card:hover,
-  .hf-article:hover, .hf-other-grid > a:hover {
-    translate: 0 -5px;
-  }
-  .hf-plan-plate, .hf-review-photo img, .hf-team-card > img, .hf-article > img {
-    transition: rotate 450ms cubic-bezier(.22, 1, .36, 1), translate 450ms cubic-bezier(.22, 1, .36, 1);
-  }
-  .hf-price-card:hover .hf-plan-plate {
-    rotate: -5deg;
-    translate: 0 -4px;
-  }
-  .hf-review:hover .hf-review-photo img, .hf-team-card:hover > img, .hf-article:hover > img {
-    rotate: -1.5deg;
-    translate: 0 -3px;
-  }
-  .button > span[aria-hidden], .hf-text-link > span[aria-hidden] {
-    transition: translate 220ms cubic-bezier(.22, 1, .36, 1);
-  }
-  .button:hover > span[aria-hidden], .hf-text-link:hover > span[aria-hidden] {
-    translate: 4px -2px;
-  }
 }

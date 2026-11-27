@@ -48,7 +48,7 @@
       heading.append(band);
       effects.push(bandEffect(band, true));
     }
-    register(heading, effects);
+    if (!heading.closest("#reviews")) register(heading, effects);
   });
 
   document.querySelectorAll(".hf-plate-scene").forEach(scene => {
@@ -68,69 +68,38 @@
     register(scene, effects);
   });
 
-  const cards = document.querySelectorAll(
-    ".hf-price-card, .hf-review, .hf-team-card, .hf-article, " +
-    ".hf-offer-inner, .hf-about-grid, .hf-kitchen-grid, .hf-contact-grid, " +
-    ".hf-seo-grid, .hf-detail-price, .hf-other-grid > a, .hf-faq-grid details, .hf-hero-facts"
-  );
-  cards.forEach(card => {
-    const siblings = [...card.parentElement.children];
-    const delay = Math.min(siblings.indexOf(card), 5) * 70;
-    const effects = [effect(card, [
-      { opacity: 0, transform: "translateY(24px) scale(.97)" },
-      { opacity: 1, transform: "translateY(0) scale(1)" },
-    ], 760, delay, "card")];
-    const photo = card.querySelector(".hf-plan-plate, .hf-review-photo img, .hf-team-card > img, .hf-article > img, .hf-video-poster img");
-    if (photo) {
-      effects.push(effect(photo, [
-        { opacity: 0, clipPath: "inset(0 0 100% 0 round 20px)", transform: "rotate(-5deg) scale(.96)" },
-        { opacity: 1, clipPath: "inset(0 0 0 0 round 20px)", transform: "rotate(0) scale(1)" },
-      ], 1000, delay + 100, "photo"));
-    }
-    const title = card.querySelector("h3");
-    if (title) {
-      effects.push(effect(title, [
-        { opacity: 0, clipPath: "inset(0 100% 0 0)" },
-        { opacity: 1, clipPath: "inset(0 0 0 0)" },
-      ], 780, delay + 180, "card-title"));
-    }
-    register(card, effects);
-  });
-
   document.querySelectorAll(
     ".hf-hero-copy > p, .hf-heading > p, .hf-trial p, " +
     ".hf-about p, .hf-kitchen-grid > div > p, .hf-seo p, .hf-contact-grid > div > p, " +
     ".hf-detail-summary > p, .hf-detail-content > .container > div > p, .hf-footer-top > *"
-  ).forEach(copy => register(copy, [effect(copy, [
-    { opacity: 0, transform: "translateY(14px)" },
-    { opacity: 1, transform: "translateY(0)" },
-  ], 700, 100, "copy")]));
+  ).forEach(copy => {
+    if (copy.closest("#reviews")) return;
+    register(copy, [effect(copy, [
+      { opacity: 0, transform: "translateY(6px)" },
+      { opacity: 1, transform: "translateY(0)" },
+    ], 420, 0, "copy")]);
+  });
 
   function start(record) {
+    if (record.entered) return;
     record.target.classList.remove("hf-motion-pending");
-    if (!record.animations.length) {
-      try {
-        for (const item of record.effects) {
-          const animation = item.element.animate(item.frames, {
-            duration: item.duration,
-            delay: item.delay,
-            easing: ease,
-            fill: "both",
-          });
-          animation.id = "hf-" + item.name;
-          record.animations.push(animation);
-        }
-      } catch {
-        record.animations.forEach(animation => animation.cancel());
-        record.animations = [];
+    try {
+      for (const item of record.effects) {
+        const animation = item.element.animate(item.frames, {
+          duration: item.duration,
+          delay: item.delay,
+          easing: ease,
+          fill: "both",
+        });
+        animation.id = "hf-" + item.name;
+        record.animations.push(animation);
       }
-    } else {
-      record.animations.forEach(animation => {
-        animation.updatePlaybackRate(1);
-        animation.play();
-      });
+    } catch {
+      record.animations.forEach(animation => animation.cancel());
+      record.animations = [];
     }
     record.entered = true;
+    observer?.unobserve(record.target);
   }
 
   function stop() {
@@ -156,8 +125,6 @@
           if (record.target.contains(document.activeElement)) {
             record.animations.forEach(animation => animation.finish());
           }
-        } else if (record.entered && !record.target.contains(document.activeElement)) {
-          record.animations.forEach(animation => animation.reverse());
         }
       }
     }, { rootMargin: "-88px 0px -4%", threshold: .12 });
@@ -183,9 +150,9 @@
   function animateChange(element, index = 0) {
     transient.get(element)?.cancel();
     const animation = element.animate([
-      { opacity: 0, clipPath: "inset(0 0 100% 0)", transform: "translateY(12px)" },
-      { opacity: 1, clipPath: "inset(0 0 0 0)", transform: "translateY(0)" },
-    ], { duration: 550, delay: index * 60, easing: ease });
+      { opacity: .65 },
+      { opacity: 1 },
+    ], { duration: 220, delay: index * 30, easing: ease });
     animation.id = "hf-value-change";
     transient.set(element, animation);
     const clear = () => {

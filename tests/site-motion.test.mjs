@@ -6,12 +6,13 @@ import vm from "node:vm";
 const source = await readFile(new URL("../src/site-motion.js", import.meta.url), "utf8");
 
 // Exercise the motion lifecycle without relying on browser-specific frame timing.
-function fixture({ reduced = false, animationFails = false } = {}) {
+function fixture({ reduced = false, animationFails = false, reviews = false } = {}) {
   const listeners = new Map();
   const animations = [];
   let preferenceChanged;
   let intersection;
   let disconnected = 0;
+  const observed = new Set();
 
   class Element {
     children = [];
@@ -20,7 +21,7 @@ function fixture({ reduced = false, animationFails = false } = {}) {
     constructor() {
       this.classList.remove = this.classList.delete;
     }
-    closest() { return null; }
+    closest(selector) { return reviews && selector === "#reviews" ? this : null; }
     setAttribute() {}
     append(child) { this.children.push(child); }
     contains(target) { return target === this; }
@@ -40,18 +41,21 @@ function fixture({ reduced = false, animationFails = false } = {}) {
     }
   }
   const heading = new Element();
+  const copy = new Element();
   const preference = {
     matches: reduced,
     addEventListener: (_, callback) => { preferenceChanged = callback; },
   };
   class IntersectionObserver {
     constructor(callback) { intersection = callback; }
-    observe() {}
+    observe(target) { observed.add(target); }
+    unobserve(target) { observed.delete(target); }
     disconnect() { disconnected++; }
   }
   const document = {
     activeElement: null,
-    querySelectorAll: selector => selector.startsWith("main h1") ? [heading] : [],
+    querySelectorAll: selector => selector.startsWith("main h1") ? [heading] :
+      reviews && selector.startsWith(".hf-hero-copy") ? [copy] : [],
     createElement: () => new Element(),
     addEventListener: (type, callback) => listeners.set(type, callback),
   };
@@ -60,7 +64,7 @@ function fixture({ reduced = false, animationFails = false } = {}) {
     IntersectionObserver, Element, document, CSS: { supports: () => true },
   });
   return {
-    heading, animations,
+    heading, copy, animations, observed,
     pending: () => heading.classList.has("hf-motion-pending"),
     intersect: visible => intersection([{ target: heading, isIntersecting: visible }]),
     focus: () => listeners.get("focusin")({ target: heading }),
@@ -84,7 +88,7 @@ test("changing to reduced motion cancels active effects and reveals pending cont
   assert.equal(page.pending(), false);
   assert.equal(page.animations.length, 2);
   page.intersect(false);
-  assert.ok(page.animations.every(animation => animation.calls.includes("reverse")));
+  assert.ok(page.animations.every(animation => !animation.calls.includes("reverse")));
   page.reduce();
   assert.equal(page.disconnected(), 1);
   assert.equal(page.pending(), false);
@@ -99,14 +103,25 @@ test("keyboard focus finishes entry so a pending target is visible immediately",
   assert.ok(page.animations.every(animation => animation.calls.includes("finish")));
 });
 
-test("returning to a section replays its existing effects", () => {
+test("returning to a section leaves it visible without repeating its effects", () => {
   const page = fixture();
+  assert.ok(page.observed.has(page.heading));
   page.intersect(true);
+  assert.equal(page.observed.has(page.heading), false);
   page.intersect(false);
   page.intersect(true);
   assert.equal(page.animations.length, 2);
-  assert.ok(page.animations.every(animation => animation.calls.includes("reverse")));
-  assert.ok(page.animations.every(animation => animation.calls.includes("play")));
+  assert.equal(page.pending(), false);
+  assert.ok(page.animations.every(animation => animation.calls.length === 0));
+});
+
+test("reviews remain visible and static without entering the motion lifecycle", () => {
+  const page = fixture({ reviews: true });
+  assert.equal(page.pending(), false);
+  assert.equal(page.copy.classList.has("hf-motion-pending"), false);
+  assert.equal(page.observed.size, 0);
+  page.focus();
+  assert.equal(page.animations.length, 0);
 });
 
 test("an unavailable animation leaves content visible", () => {
