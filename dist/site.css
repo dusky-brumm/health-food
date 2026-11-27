@@ -315,13 +315,14 @@ a:hover {
   box-shadow: 0 4px 12px #d7d7ba40;
 }
 .hf-programs {
+  padding-top: 64px;
   padding-bottom: 75px;
 }
 .hf-pricing-toolbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   gap: 16px;
 }
 .hf-pricing-toolbar > span {
@@ -378,7 +379,7 @@ a:hover {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .02em;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
 }
 .hf-price {
   margin: 24px 0 3px;
@@ -408,7 +409,7 @@ a:hover {
 .hf-price-card ul {
   list-style: none;
   margin: 0 0 24px;
-  padding: 24px 0;
+  padding: 16px 0;
   text-align: left;
   border-block: 1px solid #dce3cf;
   display: grid;
@@ -545,6 +546,14 @@ a:hover {
 }
 .hf-review:hover img {
   transform: scale(1.025);
+}
+.hf-review:is(
+  [data-video="JH9KCIwgJ4w"],
+  [data-video="RGbolxURw_E"],
+  [data-video="4ogtRHNB6jI"],
+  [data-video="1xba7TgbMKk"]
+) img {
+  scale: 1.34;
 }
 .hf-play {
   display: grid;
@@ -1915,7 +1924,14 @@ a:hover {
   }
   .hf-contact-card p,
   .hf-contact-card a {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .hf-contact-card a {
+    min-height: 28px;
+  }
+  .hf-contact-grid > div > span:last-child {
+    font-size: 13px;
   }
   .hf-footer {
     padding: 38px 0 22px;
@@ -1932,28 +1948,31 @@ a:hover {
     height: 58px;
   }
   .hf-footer-top > p {
-    font-size: 11px;
+    font-size: 13px;
     margin-top: 12px;
     line-height: 1.9;
   }
   .hf-footer-top nav {
-    font-size: 12px;
+    font-size: 14px;
+  }
+  .hf-footer-top nav a {
+    min-height: 28px;
   }
   .hf-footer-top > div {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.9;
   }
   .hf-footer-bottom {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-size: 11px;
+    font-size: 12px;
     gap: 10px;
     line-height: 1.9;
     padding-top: 23px;
   }
   .hf-footer-bottom > .inline-button {
-    font-size: 11px;
+    font-size: 12px;
     margin-top: 2px;
   }
   .hf-breadcrumb {
@@ -2263,7 +2282,7 @@ a:hover {
 }
 
 .hf-card-cost {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 .hf-card-cost .hf-price {
   margin: 0 0 4px;
@@ -2299,7 +2318,7 @@ a:hover {
   margin-inline: auto;
 }
 .hf-pricing-heading h2 em {
-  display: block;
+  display: inline;
 }
 .hf-pricing-heading > p {
   max-width: 620px;
@@ -2345,7 +2364,7 @@ a:hover {
   .hf-price-card h3 {
     font-size: 15px;
     min-height: 0;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .hf-price-card .hf-price strong {
     font-size: 44px;
@@ -2355,5 +2374,20 @@ a:hover {
   }
   .hf-heading > p {
     font-size: 15px;
+  }
+  .hf-programs {
+    padding-top: 40px;
+  }
+  .hf-pricing-heading > p {
+    margin-top: 16px;
+  }
+  .hf-detail-hero {
+    padding-top: 24px;
+  }
+  .hf-detail-hero h1 {
+    font-size: 34px;
+  }
+  .hf-detail-hero .hf-detail-grid {
+    gap: 20px;
   }
 }
