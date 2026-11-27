@@ -1711,3 +1711,67 @@ a:hover {
 [data-plan-total], #plan-price, #plan-total {
   display: inline-block;
 }
+
+/* Full-width surfaces give each section a quiet, organic boundary. */
+.hf-offer, .hf-detail-hero {
+  padding-bottom: clamp(56px, 6vw, 80px);
+}
+main > :is(.hf-section, .hf-trial), .hf-footer {
+  --section-wave-height: clamp(32px, 4vw, 52px);
+  --section-wave-flip: 1;
+  position: relative;
+  isolation: isolate;
+  view-timeline: --hf-section block;
+}
+main > :is(.hf-section, .hf-trial) {
+  --section-surface: var(--paper);
+  background: var(--section-surface);
+  padding-block: clamp(56px, 6vw, 80px);
+}
+main > .hf-trial {
+  --section-surface: color-mix(in srgb, var(--lime) 14%, var(--paper));
+}
+main > :is(.hf-team, .hf-articles, .hf-detail-menu) {
+  --section-surface: color-mix(in srgb, var(--lime) 10%, var(--paper));
+}
+main > #reviews,
+main > .hf-trial-repeat,
+main > .hf-seo,
+main > .hf-detail-faq {
+  --section-surface: var(--soft);
+}
+main > :is(.hf-section, .hf-trial):nth-of-type(even) {
+  --section-wave-flip: -1;
+}
+.hf-footer {
+  --section-surface: #171b12;
+  margin-top: 0;
+}
+main > :is(.hf-section, .hf-trial)::before, .hf-footer::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset-inline: 0;
+  top: calc(1px - var(--section-wave-height));
+  height: var(--section-wave-height);
+  background: var(--section-surface);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 64' preserveAspectRatio='none'%3E%3Cpath d='M0 24 C240 42 480 4 720 22 S1200 40 1440 18 V64 H0 Z'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  transform: scale(var(--section-wave-flip), 1);
+  transform-origin: center bottom;
+}
+@keyframes hf-wave-drift {
+  from { transform: scale(var(--section-wave-flip), .9); }
+  to { transform: scale(var(--section-wave-flip), 1.1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    main > :is(.hf-section, .hf-trial)::before, .hf-footer::before {
+      animation: hf-wave-drift 1s linear both;
+      animation-timeline: --hf-section;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
