@@ -9,6 +9,7 @@ const rawBase = process.env.SITE_BASE_PATH || "/";
 if (!/^\/(?:[a-zA-Z0-9_-]+\/)*$/.test(rawBase)) throw new Error("SITE_BASE_PATH must be an absolute path ending in /.");
 await import("./src/render-pages.mjs");
 await copyFile(path.join(root, "src/app.js"), path.join(root, "dist/app.js"));
+await copyFile(path.join(root, "src/site-motion.js"), path.join(root, "dist/site-motion.js"));
 await copyFile(path.join(root, "src/site.css"), path.join(root, "dist/site.css"));
 await mkdir(path.join(root, "dist/assets/plates"), { recursive: true });
 for (const name of ["salmon.webp", "ribeye.webp", "sea-bass.webp"]) {
@@ -44,6 +45,7 @@ const files = new Set([
   "index.html",
   "styles.css",
   "app.js",
+  "site-motion.js",
   "assets/fonts.css",
   "site.css",
   ...[...js.matchAll(/photo:\s*["']([^"']+)["']/g)].map(
@@ -83,12 +85,10 @@ const pages = await verifyPages(distRoot);
 const fonts = await readFile(path.join(root, "dist/assets/fonts.css"), "utf8");
 for (const font of fonts.matchAll(/url\((?:['"])?\.\/([^)'"\s]+)(?:['"])?\)/g))
   await access(path.join(root, "dist/assets", font[1]));
-const check = spawnSync(
-  process.execPath,
-  ["--check", path.join(root, "dist/app.js")],
-  { stdio: "inherit" },
-);
-if (check.status !== 0) process.exit(check.status || 1);
+for (const script of ["app.js", "site-motion.js"]) {
+  const check = spawnSync(process.execPath, ["--check", path.join(root, "dist", script)], { stdio: "inherit" });
+  if (check.status !== 0) process.exit(check.status || 1);
+}
 const manifest = JSON.parse(
   await readFile(path.join(root, ".openai/hosting.json"), "utf8"),
 );

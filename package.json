@@ -5,7 +5,8 @@
   "description": "Responsive Health Food concept with meal programs, menu, preference quiz and local order drafts.",
   "scripts": {
     "dev": "node server.mjs",
-    "check": "node --check dist/app.js",
+    "check": "node --check dist/app.js && node --check dist/site-motion.js",
+    "test": "node --test",
     "build": "node build.mjs",
     "deploy": "node deploy.mjs"
   },
