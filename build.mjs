@@ -59,7 +59,8 @@ async function verifyPages(directory) {
     if (new Set(ids).size !== ids.length) throw new Error(`Duplicate IDs: ${file}`);
     for (const [, value] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
       if (/^(https?:|mailto:|tel:|data:)/.test(value)) continue;
-      const [relative, hash] = value.split("#");
+      const [reference, hash] = value.split("#");
+      const relative = reference.split("?")[0];
       let target = path.resolve(path.dirname(file), relative || ".");
       if (!relative) target = file;
       if (target !== distRoot && !target.startsWith(distRoot + path.sep)) throw new Error(`Link escapes dist: ${value}`);

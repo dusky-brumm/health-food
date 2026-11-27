@@ -1,4 +1,5 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { programs, reviews, team } from "./site-data.mjs";
 
 const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
@@ -7,6 +8,10 @@ const money = value => new Intl.NumberFormat("ru-KZ").format(value) + " ₸";
 const dialogs = await readFile(new URL("./templates/dialogs.html", import.meta.url), "utf8");
 const weekly = await readFile(new URL("./templates/weekly-menu.html", import.meta.url), "utf8");
 const root = new URL("../dist/", import.meta.url);
+const stylesheetVersion = createHash("sha256")
+  .update(await readFile(new URL("./site.css", import.meta.url)))
+  .update(await readFile(new URL("../dist/assets/fonts.css", import.meta.url)))
+  .digest("hex").slice(0, 12);
 const durations = () => `<div class="hf-durations" role="group" aria-label="Количество дней питания">${[1,5,20].map(d => `<button data-duration="${d}" aria-pressed="${d===1}">${d} ${d===1?"день":"дней"}</button>`).join("")}</div>`;
 const logo = prefix => `<img src="${prefix}assets/original/logo-hd.png" width="300" height="159" alt="Health Food" />`;
 const header = prefix => `<header class="hf-header"><div class="container hf-header-inner"><a class="hf-logo" href="${prefix}" aria-label="Health Food — на главную">${logo(prefix)}</a><nav class="hf-nav" aria-label="Основная навигация"><a href="${prefix}#programs">Программы</a><a href="${prefix}#reviews">Отзывы</a><a href="${prefix}#about">О нас</a><a href="${prefix}#contacts">Контакты</a></nav><div class="hf-header-contact"><a href="tel:+77470940044">+7 747 094 00 44</a><span>Алматы · 10:00–19:00</span></div><button class="menu-toggle icon-button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-nav">${icon("menu")}</button></div><nav id="mobile-nav" class="mobile-nav" aria-label="Мобильная навигация" hidden><a href="${prefix}#programs">Программы питания</a><a href="${prefix}#reviews">Отзывы</a><a href="${prefix}#about">О нас</a><a href="${prefix}#contacts">Контакты</a><a href="tel:+77470940044">+7 747 094 00 44</a></nav></header>`;
@@ -72,7 +77,7 @@ async function writePage({key=null,path="index.html",prefix="./"}) {
   const title=p?`${p.name} — программа питания Health Food` : "Health Food — здоровое питание с доставкой в Алматы";
   const description=p?p.description:"Готовые рационы Health Food с доставкой по Алматы. Три программы питания, меню, отзывы и знакомство с нашей кухней.";
   const videoDialog=`<dialog id="video-dialog" class="modal hf-video-dialog" aria-labelledby="video-title"><button class="modal-close icon-button" data-close aria-label="Закрыть видео">${icon("x")}</button><h2 id="video-title">Видео Health Food</h2><div id="video-content"></div><a id="video-external" target="_blank" rel="noopener">Открыть видео на YouTube ${arrow}</a></dialog>`;
-  const html=`<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#171a14"><meta name="description" content="${description}"><meta name="robots" content="noindex, nofollow"><title>${title}</title><link rel="icon" type="image/webp" href="${prefix}assets/original/logo.webp"><link rel="stylesheet" href="${prefix}assets/fonts.css"><link rel="stylesheet" href="${prefix}styles.css">${key?"":`<link rel="stylesheet" href="${prefix}assets/dish-orbit/dish-orbit.css">`}<link rel="stylesheet" href="${prefix}site.css"><script src="${prefix}app.js" defer></script></head><body data-root="${prefix}" data-active-program="${key||"balance"}"><a class="skip-link" href="#main">Перейти к содержимому</a>${header(prefix)}<main id="main">${key?detailpage(key):homepage()}</main>${footer(prefix)}${dialogs}${videoDialog}<script type="application/json" id="program-data">${JSON.stringify(programs).replaceAll("<","\\u003c")}</script></body></html>`;
+  const html=`<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#171a14"><meta name="description" content="${description}"><meta name="robots" content="noindex, nofollow"><title>${title}</title><link rel="icon" type="image/webp" href="${prefix}assets/original/logo.webp"><link rel="stylesheet" href="${prefix}assets/fonts.css?v=${stylesheetVersion}"><link rel="stylesheet" href="${prefix}styles.css">${key?"":`<link rel="stylesheet" href="${prefix}assets/dish-orbit/dish-orbit.css">`}<link rel="stylesheet" href="${prefix}site.css?v=${stylesheetVersion}"><script src="${prefix}app.js" defer></script></head><body data-root="${prefix}" data-active-program="${key||"balance"}"><a class="skip-link" href="#main">Перейти к содержимому</a>${header(prefix)}<main id="main">${key?detailpage(key):homepage()}</main>${footer(prefix)}${dialogs}${videoDialog}<script type="application/json" id="program-data">${JSON.stringify(programs).replaceAll("<","\\u003c")}</script></body></html>`;
   const target=new URL(path,root);
   await mkdir(new URL("./",target),{recursive:true});
   await writeFile(target,html);
