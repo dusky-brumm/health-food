@@ -237,14 +237,21 @@ a:hover {
   filter: drop-shadow(0 20px 18px #20251c20);
 }
 .hf-hero-visual {
-  margin: 10px 24px 54px;
+  width: min(100%, 440px);
+  justify-self: end;
+  margin: 0;
+}
+.hf-ration-visual > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 28px;
 }
 .hf-hero-facts {
-  position: absolute;
-  bottom: -36px;
-  left: -32px;
   display: flex;
-  gap: 22px;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
   padding: 20px 24px;
   border-radius: 24px;
   background: #fff;
@@ -347,12 +354,14 @@ a:hover {
   line-height: 1.2;
   min-height: 56px;
 }
-.hf-plan-plate {
-  width: 190px;
-  height: 190px;
-  margin: 16px auto;
+.hf-plan-ration {
+  display: block;
+  width: min(100%, 270px);
+  height: auto;
+  aspect-ratio: 4 / 5;
+  margin: 16px auto 0;
   object-fit: contain;
-  filter: drop-shadow(0 10px 10px #20251c1c);
+  border-radius: 18px;
 }
 .hf-card-cost {
   margin: 12px 0 20px;
@@ -451,7 +460,7 @@ a:hover {
   overflow: hidden;
 }
 .hf-trial-visual {
-  max-width: 280px;
+  max-width: 240px;
 }
 .hf-trial h2 {
   font-size: 44px;
@@ -811,7 +820,8 @@ a:hover {
 }
 .hf-detail-visual {
   grid-area: visual;
-  padding: 20px;
+  width: min(100%, 420px);
+  margin-inline: auto;
 }
 .hf-detail-summary {
   grid-area: summary;
@@ -1081,7 +1091,6 @@ a:hover {
     font-size: 52px;
   }
   .hf-hero-facts {
-    left: -30px;
     gap: 16px;
     padding: 16px;
   }
@@ -1102,10 +1111,6 @@ a:hover {
   }
   .hf-price strong {
     font-size: 34px;
-  }
-  .hf-plan-plate {
-    width: 160px;
-    height: 160px;
   }
   .hf-heading {
     gap: 28px;
@@ -1156,9 +1161,6 @@ a:hover {
   }
   .hf-hero-facts {
     flex-direction: column;
-    left: auto;
-    right: 0;
-    bottom: -72px;
     gap: 10px;
   }
   .hf-hero-facts > div {
@@ -1188,10 +1190,6 @@ a:hover {
   }
   .hf-price-card li {
     font-size: 12px;
-  }
-  .hf-plan-plate {
-    width: 140px;
-    height: 140px;
   }
   .hf-price-card .button {
     font-size: 13px;
@@ -1317,16 +1315,12 @@ a:hover {
     margin-bottom: 20px;
   }
   .hf-hero-visual {
-    width: min(82%, 360px);
+    width: min(100%, 320px);
     justify-self: center;
-    margin: 12px 0 76px;
+    margin: 0;
   }
   .hf-hero-facts {
     flex-direction: row;
-    left: 50%;
-    right: auto;
-    bottom: -56px;
-    translate: -50% 0;
     gap: 16px;
     padding: 16px 20px;
     max-width: calc(100vw - 36px);
@@ -1380,8 +1374,8 @@ a:hover {
   }
   .hf-price-card {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 104px;
-    grid-template-areas: "name plate" "cost cost" "facts facts" "action action" "secondary secondary";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "name" "ration" "cost" "facts" "action" "secondary";
     column-gap: 12px;
     padding: 28px;
   }
@@ -1391,12 +1385,8 @@ a:hover {
     font-size: 22px;
     min-height: 0;
   }
-  .hf-plan-plate {
-    grid-area: plate;
-    align-self: center;
-    width: 104px;
-    height: 104px;
-    margin: 0;
+  .hf-plan-ration {
+    grid-area: ration;
   }
   .hf-card-cost {
     grid-area: cost;
@@ -1448,7 +1438,7 @@ a:hover {
     border-radius: 28px;
   }
   .hf-trial-visual, .hf-trial-repeat .hf-trial-visual {
-    width: 190px;
+    width: min(100%, 200px);
     justify-self: center;
     order: 0;
   }
@@ -1584,7 +1574,7 @@ a:hover {
     font-size: 32px;
   }
   .hf-detail-visual {
-    width: min(76%, 280px);
+    width: min(100%, 300px);
     justify-self: center;
     padding: 0;
   }
@@ -1635,15 +1625,11 @@ a:hover {
 }
 @media (max-width: 360px) {
   .hf-price-card {
-    grid-template-columns: minmax(0, 1fr) 88px;
+    grid-template-columns: minmax(0, 1fr);
     padding: 24px;
   }
   .hf-price-card h3 {
     font-size: 18px;
-  }
-  .hf-plan-plate {
-    width: 88px;
-    height: 88px;
   }
   .hf-logo img {
     width: 88px;
