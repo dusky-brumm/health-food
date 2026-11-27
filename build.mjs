@@ -1,9 +1,32 @@
-import { readFile, access } from "node:fs/promises";
+import { readFile, access, copyFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { build } from "esbuild";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
+const orbitBuild = await build({
+  absWorkingDir: root,
+  entryPoints: ["src/dish-orbit-entry.jsx"],
+  outdir: "dist/assets/dish-orbit",
+  entryNames: "dish-orbit",
+  assetNames: "[name]-[hash]",
+  publicPath: "/assets/dish-orbit",
+  bundle: true,
+  minify: true,
+  format: "esm",
+  target: ["es2022"],
+  loader: { ".webp": "file", ".woff2": "file" },
+  legalComments: "external",
+  define: { "process.env.NODE_ENV": '"production"' },
+  metafile: true,
+});
+await copyFile(
+  path.join(root, "src/vendor/dish-orbit/LICENSE"),
+  path.join(root, "dist/assets/dish-orbit/COMPONENT-LICENSE.txt"),
+);
+for (const output of Object.keys(orbitBuild.metafile.outputs))
+  await access(path.join(root, output));
 const html = await readFile(path.join(root, "dist/index.html"), "utf8");
 const js = await readFile(path.join(root, "dist/app.js"), "utf8");
 const files = new Set([
@@ -34,5 +57,5 @@ const manifest = JSON.parse(
 if (manifest.static?.directory !== "dist" || !manifest.project_id)
   throw new Error("Invalid hosting configuration");
 console.log(
-  `Static build ready: ${files.size} entry assets, local fonts, valid JavaScript and hosting manifest.`,
+  `Static build ready: ${files.size} entry assets, original dish carousel, local fonts, valid JavaScript and hosting manifest.`,
 );

@@ -18,6 +18,7 @@
     />
     <link rel="stylesheet" href="./assets/fonts.css" />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./assets/dish-orbit/dish-orbit.css" />
     <script src="./app.js" defer></script>
   </head>
   <body>
@@ -336,69 +337,98 @@
               <span class="demo-label">Пример меню · программа «Баланс»</span>
             </div>
           </div>
-          <div class="menu-toolbar">
-            <div class="day-tabs" role="tablist" aria-label="День меню">
-              <button
-                role="tab"
-                id="day-tab-0"
-                aria-controls="day-menu"
-                aria-selected="true"
-                data-day="0"
+        </div>
+        <div
+          id="dish-orbit-root"
+          class="dish-orbit-host"
+          aria-busy="true"
+          aria-label="Примеры блюд"
+        >
+          <p class="orbit-loading" role="status">Готовим красивую подачу…</p>
+        </div>
+        <div class="container">
+          <p class="orbit-demo-note">
+            В карусели — демонстрационные блюда, повара и оценки. Фактическое
+            меню согласуется перед заказом.
+          </p>
+          <details class="weekly-menu" id="weekly-menu">
+            <summary>
+              Посмотреть пример меню на неделю<svg
+                class="icon"
+                aria-hidden="true"
               >
-                Понедельник</button
-              ><button
-                role="tab"
-                id="day-tab-1"
-                aria-controls="day-menu"
-                aria-selected="false"
-                tabindex="-1"
-                data-day="1"
+                <use href="#i-plus" />
+              </svg>
+            </summary>
+            <div class="menu-toolbar">
+              <div class="day-tabs" role="tablist" aria-label="День меню">
+                <button
+                  role="tab"
+                  id="day-tab-0"
+                  aria-controls="day-menu"
+                  aria-selected="true"
+                  data-day="0"
+                >
+                  Понедельник</button
+                ><button
+                  role="tab"
+                  id="day-tab-1"
+                  aria-controls="day-menu"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-day="1"
+                >
+                  Вторник</button
+                ><button
+                  role="tab"
+                  id="day-tab-2"
+                  aria-controls="day-menu"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-day="2"
+                >
+                  Среда</button
+                ><button
+                  role="tab"
+                  id="day-tab-3"
+                  aria-controls="day-menu"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-day="3"
+                >
+                  Четверг</button
+                ><button
+                  role="tab"
+                  id="day-tab-4"
+                  aria-controls="day-menu"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-day="4"
+                >
+                  Пятница
+                </button>
+              </div>
+              <span class="daily-total" id="daily-total"
+                >1 700 ккал за день</span
               >
-                Вторник</button
-              ><button
-                role="tab"
-                id="day-tab-2"
-                aria-controls="day-menu"
-                aria-selected="false"
-                tabindex="-1"
-                data-day="2"
-              >
-                Среда</button
-              ><button
-                role="tab"
-                id="day-tab-3"
-                aria-controls="day-menu"
-                aria-selected="false"
-                tabindex="-1"
-                data-day="3"
-              >
-                Четверг</button
-              ><button
-                role="tab"
-                id="day-tab-4"
-                aria-controls="day-menu"
-                aria-selected="false"
-                tabindex="-1"
-                data-day="4"
-              >
-                Пятница
+            </div>
+            <div
+              class="meal-grid"
+              id="day-menu"
+              role="tabpanel"
+              aria-labelledby="day-tab-0"
+              tabindex="0"
+            ></div>
+            <div class="menu-footnote">
+              <span
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-leaf" /></svg
+                >Фото и меню — примеры для знакомства с концептом.</span
+              ><button class="inline-button" data-quiz>
+                Хочу такой рацион
               </button>
             </div>
-            <span class="daily-total" id="daily-total">1 700 ккал за день</span>
-          </div>
-          <div
-            class="meal-grid"
-            id="day-menu"
-            role="tabpanel"
-            aria-labelledby="day-tab-0"
-            tabindex="0"
-          ></div>
-          <div class="menu-footnote">
-            <span
-              ><svg class="icon" aria-hidden="true"><use href="#i-leaf" /></svg
-              >Фото и меню — примеры для знакомства с концептом.</span
-            ><button class="inline-button" data-quiz>Хочу такой рацион</button>
-          </div>
+          </details>
         </div>
       </section>
 

@@ -31,6 +31,53 @@ const plans = {
   },
 };
 const state = { program: "balance", duration: 1, day: 0 };
+
+// Keep the original React/GSAP carousel off the initial loading path.
+const orbitHost = $("#dish-orbit-root");
+let orbitLoading = false;
+function loadDishOrbit() {
+  if (orbitLoading || !orbitHost) return;
+  orbitLoading = true;
+  const openWeeklyMenu = () => {
+    $("#weekly-menu").open = true;
+    $("#weekly-menu").scrollIntoView({ behavior: "auto" });
+  };
+  import("./assets/dish-orbit/dish-orbit.js")
+    .then(({ mountDishOrbit }) =>
+      mountDishOrbit(orbitHost, {
+        onPrograms: () => $("#programs").scrollIntoView({ behavior: "auto" }),
+        onWeeklyMenu: openWeeklyMenu,
+      }),
+    )
+    .catch(() => {
+      orbitHost.setAttribute("aria-busy", "false");
+      orbitHost.classList.add("orbit-failed");
+      orbitHost.replaceChildren();
+      const message = document.createElement("p");
+      message.textContent =
+        "Карусель не загрузилась. Меню на неделю доступно ниже.";
+      const fallback = document.createElement("button");
+      fallback.className = "button";
+      fallback.textContent = "Открыть меню недели";
+      fallback.addEventListener("click", openWeeklyMenu);
+      orbitHost.append(message, fallback);
+    });
+}
+if (orbitHost && "IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        observer.disconnect();
+        loadDishOrbit();
+      }
+    },
+    { rootMargin: "600px" },
+  );
+  observer.observe(orbitHost);
+} else {
+  loadDishOrbit();
+}
+
 const daysText = (count) => (count === 1 ? "1 день" : `${count} дней`);
 
 function updatePlan() {

@@ -1,0 +1,128 @@
+/* Original component variables; no Tailwind reset is applied to the host page. */
+.dish-orbit-host {
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(14.5% 0 0);
+  --color-muted-foreground: oklch(55.6% 0 0);
+  --color-primary: oklch(20.5% 0 0);
+  --orbit-height: clamp(520px, calc(100svh - 102px), 760px);
+  --orbit-top: 102px;
+  color-scheme: light;
+  width: 100%;
+}
+.dish-orbit-host:not([data-ready="true"]) {
+  min-height: var(--orbit-height);
+  display: grid;
+  place-items: center;
+}
+.orbit-loading {
+  font-size: 16px;
+  color: #687368;
+  padding: 30px;
+}
+.orbit-demo-note {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #687368;
+  margin: 22px 0 30px;
+}
+.weekly-menu {
+  border-block: 1px solid #d4dcc9;
+  scroll-margin-top: 110px;
+}
+.weekly-menu > summary {
+  padding: 25px 0;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.weekly-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.weekly-menu[open] > summary .icon {
+  transform: rotate(45deg);
+}
+.weekly-menu .menu-footnote {
+  padding-bottom: 25px;
+}
+.orbit-failed {
+  min-height: 260px;
+  padding: 40px 24px;
+  gap: 20px;
+  align-content: center;
+  text-align: center;
+}
+.dish-orbit-host .dsh-root {
+  top: var(--orbit-top);
+  line-height: 1.5;
+}
+.dish-orbit-host .orbit-static .dsh-root {
+  position: relative;
+  top: 0;
+}
+.dish-orbit-host .dsh-head h2 {
+  text-wrap: initial;
+  letter-spacing: normal;
+}
+.dish-orbit-host .dsh-head p,
+.dish-orbit-host .dsh-card p {
+  text-wrap: initial;
+}
+.dish-orbit-host .dsh-btn {
+  touch-action: manipulation;
+}
+.dish-orbit-host .dsh-desc {
+  min-height: 72px;
+}
+@media (min-width: 960px) and (max-width: 1000px) {
+  .dish-orbit-host {
+    --orbit-top: 85px;
+    --orbit-height: calc(100svh - 85px);
+  }
+}
+@media (max-width: 959px) {
+  .dish-orbit-host:not([data-ready="true"]) {
+    min-height: 820px;
+  }
+  .dish-orbit-host .dsh-root {
+    min-height: 720px;
+  }
+  .dish-orbit-host .dsh-canvas {
+    padding-bottom: 30px;
+  }
+  .dish-orbit-host .dsh-desc {
+    font-size: 16px;
+    line-height: 1.55;
+    min-height: 96px;
+  }
+  .dish-orbit-host .dsh-kit {
+    font-size: 12px;
+  }
+  .dish-orbit-host .dsh-tabs,
+  .dish-orbit-host .dsh-acts {
+    font-size: 14px;
+  }
+  .dish-orbit-host .dsh-acts {
+    gap: 25px;
+  }
+  .dish-orbit-host .dsh-like,
+  .dish-orbit-host .dsh-ing li {
+    font-size: 12px;
+  }
+  .dish-orbit-host .dsh-pager {
+    gap: 12px;
+  }
+  .dish-orbit-host .dsh-dot {
+    min-width: 28px;
+    min-height: 20px;
+  }
+}
+@media (min-width: 960px) and (prefers-reduced-motion: no-preference) {
+  .dish-orbit-host:not([data-ready="true"]):not(.orbit-failed) {
+    min-height: calc(var(--orbit-height) * 3.8);
+  }
+}

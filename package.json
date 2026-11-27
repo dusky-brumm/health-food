@@ -10,5 +10,13 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "dependencies": {
+    "gsap": "3.15.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }
