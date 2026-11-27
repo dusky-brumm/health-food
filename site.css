@@ -217,7 +217,7 @@ a:hover {
   position: relative;
   isolation: isolate;
 }
-.hf-plate-scene::before {
+.hf-plate-scene::before, .hf-orbit-band {
   content: "";
   position: absolute;
   z-index: -1;
@@ -1326,7 +1326,7 @@ a:hover {
     left: 50%;
     right: auto;
     bottom: -56px;
-    transform: translateX(-50%);
+    translate: -50% 0;
     gap: 16px;
     padding: 16px 20px;
     max-width: calc(100vw - 36px);
@@ -1676,5 +1676,65 @@ a:hover {
     scroll-behavior: auto !important;
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* The reveal effects share the carousel's wipes and orbital movement. */
+.hf-motion-pending {
+  opacity: 0;
+}
+.hf-motion-title {
+  position: relative;
+  isolation: isolate;
+}
+.hf-heading-band {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 105%;
+  height: 34%;
+  top: 58%;
+  left: -2%;
+  border-radius: 50%;
+  background: var(--lime);
+  opacity: .2;
+  transform: rotate(-8deg);
+}
+.hf-motion-scene::before {
+  display: none;
+}
+.hf-orbit-band {
+  pointer-events: none;
+}
+[data-plan-total], #plan-price, #plan-total {
+  display: inline-block;
+}
+.button > span[aria-hidden], .hf-text-link > span[aria-hidden] {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .hf-price-card, .hf-review, .hf-team-card, .hf-article, .hf-other-grid > a {
+    transition: translate 280ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .hf-price-card:hover, .hf-review:hover, .hf-team-card:hover,
+  .hf-article:hover, .hf-other-grid > a:hover {
+    translate: 0 -5px;
+  }
+  .hf-plan-plate, .hf-review-photo img, .hf-team-card > img, .hf-article > img {
+    transition: rotate 450ms cubic-bezier(.22, 1, .36, 1), translate 450ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .hf-price-card:hover .hf-plan-plate {
+    rotate: -5deg;
+    translate: 0 -4px;
+  }
+  .hf-review:hover .hf-review-photo img, .hf-team-card:hover > img, .hf-article:hover > img {
+    rotate: -1.5deg;
+    translate: 0 -3px;
+  }
+  .button > span[aria-hidden], .hf-text-link > span[aria-hidden] {
+    transition: translate 220ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .button:hover > span[aria-hidden], .hf-text-link:hover > span[aria-hidden] {
+    translate: 4px -2px;
   }
 }
