@@ -9,6 +9,7 @@ const icon = (name) =>
   `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const plans = JSON.parse($("#program-data").textContent);
 const siteRoot = new URL(document.body.dataset.root || "./", document.baseURI);
+const assetVersion = document.body.dataset.assetVersion;
 const asset = (name) => new URL(`assets/${name}`, siteRoot).href;
 const requestedDays = Number(new URLSearchParams(location.search).get("days"));
 const state = { program: document.body.dataset.activeProgram || "balance", duration: [1,5,20].includes(requestedDays) ? requestedDays : 1, day: 0 };
@@ -23,7 +24,9 @@ function loadDishOrbit() {
     $("#weekly-menu").open = true;
     $("#weekly-menu").scrollIntoView({ behavior: "auto" });
   };
-  import(asset("dish-orbit/dish-orbit.js"))
+  const carouselUrl = new URL(asset("dish-orbit/dish-orbit.js"));
+  if (assetVersion) carouselUrl.searchParams.set("v", assetVersion);
+  import(carouselUrl.href)
     .then(({ mountDishOrbit }) =>
       mountDishOrbit(orbitHost, {
         onPrograms: () => $("#programs").scrollIntoView({ behavior: "auto" }),
