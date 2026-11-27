@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.mjs",
     "check": "node --check dist/app.js",
-    "build": "node build.mjs"
+    "build": "node build.mjs",
+    "deploy": "node deploy.mjs"
   },
   "engines": {
     "node": ">=22"

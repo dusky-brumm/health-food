@@ -7,30 +7,11 @@ const $$ = (selector, parent = document) => [
 const money = (amount) => `${new Intl.NumberFormat("ru-KZ").format(amount)} ₸`;
 const icon = (name) =>
   `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
-const plans = {
-  light: {
-    name: "Лёгкость",
-    price: 8250,
-    kcal: "900–1 400 ккал",
-    meals: "5 приёмов пищи",
-    description: "Лёгкие блюда и разнообразное меню для твоей цели.",
-  },
-  balance: {
-    name: "Баланс",
-    price: 11100,
-    kcal: "1 500–1 900 ккал",
-    meals: "5 приёмов пищи",
-    description: "Полноценное питание, чтобы чувствовать себя в своей тарелке.",
-  },
-  power: {
-    name: "Энергия",
-    price: 11600,
-    kcal: "2 000–2 500 ккал",
-    meals: "5–6 приёмов пищи",
-    description: "Больше энергии для тренировок и насыщенных дней.",
-  },
-};
-const state = { program: "balance", duration: 1, day: 0 };
+const plans = JSON.parse($("#program-data").textContent);
+const siteRoot = new URL(document.body.dataset.root || "./", document.baseURI);
+const asset = (name) => new URL(`assets/${name}`, siteRoot).href;
+const requestedDays = Number(new URLSearchParams(location.search).get("days"));
+const state = { program: document.body.dataset.activeProgram || "balance", duration: [1,5,20].includes(requestedDays) ? requestedDays : 1, day: 0 };
 
 // Keep the original React/GSAP carousel off the initial loading path.
 const orbitHost = $("#dish-orbit-root");
@@ -42,7 +23,7 @@ function loadDishOrbit() {
     $("#weekly-menu").open = true;
     $("#weekly-menu").scrollIntoView({ behavior: "auto" });
   };
-  import("./assets/dish-orbit/dish-orbit.js")
+  import(asset("dish-orbit/dish-orbit.js"))
     .then(({ mountDishOrbit }) =>
       mountDishOrbit(orbitHost, {
         onPrograms: () => $("#programs").scrollIntoView({ behavior: "auto" }),
@@ -82,32 +63,32 @@ const daysText = (count) => (count === 1 ? "1 день" : `${count} дней`);
 
 function updatePlan() {
   const plan = plans[state.program];
-  $$("[data-program]").forEach((button) => {
-    const selected = button.dataset.program === state.program;
-    button.classList.toggle("is-selected", selected);
-    button.setAttribute("aria-pressed", String(selected));
-  });
   $$("[data-duration]").forEach((button) => {
     const selected = Number(button.dataset.duration) === state.duration;
     button.classList.toggle("is-selected", selected);
     button.setAttribute("aria-pressed", String(selected));
   });
-  $("#plan-name").textContent = plan.name;
-  $("#plan-calories").textContent = plan.kcal;
-  $("#plan-description").textContent = plan.description;
-  $("#plan-meals").textContent = plan.meals;
-  $("#plan-price").textContent = money(plan.price);
-  $("#plan-days-label").textContent =
-    state.duration === 1 ? "Пробный день" : daysText(state.duration);
-  $("#plan-total-label").textContent = `Итого за ${daysText(state.duration)}`;
-  $("#plan-total").textContent = money(plan.price * state.duration);
+  const labels = {
+    "plan-name": plan.name, "plan-calories": plan.kcal,
+    "plan-description": plan.description, "plan-meals": plan.meals,
+    "plan-price": money(plan.price),
+    "plan-days-label": state.duration === 1 ? "Пробный день" : daysText(state.duration),
+    "plan-total-label": `За ${daysText(state.duration)} — от`,
+    "plan-total": money(plan.price * state.duration),
+  };
+  Object.entries(labels).forEach(([id, text]) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = text;
+  });
+  $$("[data-plan-total]").forEach(element => {
+    element.textContent = money(plans[element.dataset.planTotal].price * state.duration);
+  });
+  $$("[data-plan-days]").forEach(element => element.textContent = daysText(state.duration));
+  $$("[data-program-detail]").forEach(link => {
+    const plan = plans[link.dataset.programDetail];
+    link.href = new URL(`programs/${plan.slug}/?days=${state.duration}`, siteRoot).href;
+  });
 }
-$$("[data-program]").forEach((button) =>
-  button.addEventListener("click", () => {
-    state.program = button.dataset.program;
-    updatePlan();
-  }),
-);
 $$("[data-duration]").forEach((button) =>
   button.addEventListener("click", () => {
     state.duration = Number(button.dataset.duration);
@@ -236,7 +217,7 @@ function renderMenu() {
   $("#day-menu").innerHTML = meals
     .map(
       (meal, index) =>
-        `<button class="meal-card" data-meal="${index}" aria-label="${meal.name}: посмотреть состав и пищевую ценность"><div class="meal-image"><img src="./assets/${meal.photo}" width="700" height="560" alt="${baseMeals[index].name}" loading="lazy"><span class="meal-badge">${meal.type}</span><span class="meal-time">${meal.time}</span></div><div class="meal-body"><h3>${meal.name}</h3><p>${meal.description}</p><div class="meal-meta"><span>${meal.kcal} ккал</span><span class="meal-more">Состав ${icon("plus")}</span></div></div></button>`,
+        `<button class="meal-card" data-meal="${index}" aria-label="${meal.name}: посмотреть состав и пищевую ценность"><div class="meal-image"><img src="${asset(meal.photo)}" width="700" height="560" alt="${baseMeals[index].name}" loading="lazy"><span class="meal-badge">${meal.type}</span><span class="meal-time">${meal.time}</span></div><div class="meal-body"><h3>${meal.name}</h3><p>${meal.description}</p><div class="meal-meta"><span>${meal.kcal} ккал</span><span class="meal-more">Состав ${icon("plus")}</span></div></div></button>`,
     )
     .join("");
   $("#daily-total").textContent =
@@ -302,7 +283,7 @@ $("#day-menu").addEventListener("click", (event) => {
   if (!button) return;
   const meal = mealsForDay(state.day)[Number(button.dataset.meal)];
   $("#meal-content").innerHTML =
-    `<img class="meal-detail-photo" width="700" height="389" src="./assets/${meal.photo}" alt="${meal.name}"><div class="meal-detail-body"><span class="eyebrow">${meal.type} · ${meal.weight}</span><h2 id="meal-title">${meal.name}</h2><div class="macro-grid"><div><strong>${meal.kcal}</strong><span>ккал</span></div><div><strong>${meal.protein} г</strong><span>Белки</span></div><div><strong>${meal.fat} г</strong><span>Жиры</span></div><div><strong>${meal.carbs} г</strong><span>Углеводы</span></div></div><h3>Что внутри</h3><p>${meal.ingredients}</p><h3>Аллергены</h3><p>${meal.allergens}</p><p class="small-note">Пример блюда для демонстрации сайта. Фото иллюстративное, состав и пищевая ценность ориентировочные. Фактическое меню нужно подтвердить у кухни.</p><button class="button button-full" id="meal-select-plan">Выбрать программу питания</button></div>`;
+    `<img class="meal-detail-photo" width="700" height="389" src="${asset(meal.photo)}" alt="${meal.name}"><div class="meal-detail-body"><span class="eyebrow">${meal.type} · ${meal.weight}</span><h2 id="meal-title">${meal.name}</h2><div class="macro-grid"><div><strong>${meal.kcal}</strong><span>ккал</span></div><div><strong>${meal.protein} г</strong><span>Белки</span></div><div><strong>${meal.fat} г</strong><span>Жиры</span></div><div><strong>${meal.carbs} г</strong><span>Углеводы</span></div></div><h3>Что внутри</h3><p>${meal.ingredients}</p><h3>Аллергены</h3><p>${meal.allergens}</p><p class="small-note">Пример блюда для демонстрации сайта. Фото иллюстративное, состав и пищевая ценность ориентировочные. Фактическое меню нужно подтвердить у кухни.</p><button class="button button-full" id="meal-select-plan">Выбрать программу питания</button></div>`;
   $("#meal-select-plan").addEventListener("click", () => {
     $("#meal-dialog").close();
     $("#programs").scrollIntoView({ behavior: "auto" });
@@ -391,6 +372,10 @@ function renderQuiz() {
     $("#quiz-content").innerHTML =
       `${progress}<div class="result-icon">${icon("leaf")}</div><span class="eyebrow">Есть идея для твоего ритма</span><h2 id="quiz-title">Давай начнём с «${plan.name}»</h2><p>${preferences[quiz.format]}</p><div class="quiz-result-card"><strong>${plan.name}</strong><p>${plan.kcal} · ${plan.meals}<br>${money(plan.price)} / день · ${daysText(Number(quiz.duration))}<br>Всего ${money(plan.price * Number(quiz.duration))}</p></div><p class="small-note">Это подбор по предпочтениям, а не расчёт индивидуальной потребности в калориях. Калорийность и ограничения можно согласовать со специалистом.</p><button class="button button-full" id="apply-quiz">Выбрать эту программу</button><div class="quiz-actions"><button class="quiz-back" id="quiz-back">Вернуться к ответам</button></div>`;
     $("#apply-quiz").addEventListener("click", () => {
+      if (document.body.dataset.activeProgram !== quiz.goal) {
+        window.location.assign(new URL(`programs/${plan.slug}/?days=${quiz.duration}#programs`, siteRoot));
+        return;
+      }
       state.program = quiz.goal;
       state.duration = Number(quiz.duration);
       updatePlan();
@@ -451,7 +436,7 @@ function renderOrder() {
   const plan = plans[state.program];
   const date = earliestDate();
   $("#order-content").innerHTML =
-    `<span class="eyebrow">Хорошее начало</span><h2 id="order-title">Твой вкусный план</h2><p>Собери черновик заказа. Проверь детали — и сохрани его себе.</p><div class="order-summary"><div><strong>${plan.name} · ${daysText(state.duration)}</strong><span>${plan.kcal} · доставка включена</span></div><strong>${money(plan.price * state.duration)}</strong></div><form class="order-form" id="order-form"><div class="field-row"><div class="field"><label for="order-name">Как тебя зовут</label><input id="order-name" name="name" autocomplete="given-name" placeholder="Имя" required maxlength="60"></div><div class="field"><label for="order-phone">Телефон</label><input id="order-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required maxlength="25" aria-describedby="phone-error"><span class="form-error" id="phone-error" aria-live="polite" hidden>Укажи номер из 11 цифр, начинающийся с +7 или 8.</span></div></div><div class="field"><label for="order-address">Адрес доставки в Алматы</label><input id="order-address" name="address" autocomplete="street-address" placeholder="Улица, дом, квартира" required maxlength="200"></div><div class="field-row"><div class="field"><label for="order-date">Первый день питания</label><input id="order-date" name="date" type="date" min="${date}" value="${date}" required></div><div class="field"><label for="order-time">Время доставки</label><select id="order-time" name="time"><option>06:00–08:00</option><option>08:00–10:00</option></select></div></div><div class="field"><label for="order-comment">Что нужно учесть <span class="optional-label">(необязательно)</span></label><textarea id="order-comment" name="comment" placeholder="Пожелания, продукты, которые не любишь" maxlength="500"></textarea></div><div class="form-note">Это демоверсия. Данные не отправляются на кухню, заказ и доставка не оформляются. Можно скачать черновик.</div><button class="button button-full" type="submit">Подготовить заказ ${icon("check")}</button><p class="small-note">Данные остаются только в текущей вкладке. Оплата не требуется.</p></form>`;
+    `<span class="eyebrow">Хорошее начало</span><h2 id="order-title">Твой вкусный план</h2><p>Собери черновик заказа. Проверь детали — и сохрани его себе.</p><div class="order-summary"><div><strong>${plan.name} · ${daysText(state.duration)}</strong><span>${plan.kcal} · доставка включена</span></div><strong>от ${money(plan.price * state.duration)}</strong></div><form class="order-form" id="order-form"><div class="field-row"><div class="field"><label for="order-name">Как тебя зовут</label><input id="order-name" name="name" autocomplete="given-name" placeholder="Имя" required maxlength="60"></div><div class="field"><label for="order-phone">Телефон</label><input id="order-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required maxlength="25" aria-describedby="phone-error"><span class="form-error" id="phone-error" aria-live="polite" hidden>Укажи номер из 11 цифр, начинающийся с +7 или 8.</span></div></div><div class="field"><label for="order-address">Адрес доставки в Алматы</label><input id="order-address" name="address" autocomplete="street-address" placeholder="Улица, дом, квартира" required maxlength="200"></div><div class="field-row"><div class="field"><label for="order-date">Первый день питания</label><input id="order-date" name="date" type="date" min="${date}" value="${date}" required></div><div class="field"><label for="order-time">Время доставки</label><select id="order-time" name="time"><option>06:00–08:00</option><option>08:00–10:00</option></select></div></div><div class="field"><label for="order-comment">Что нужно учесть <span class="optional-label">(необязательно)</span></label><textarea id="order-comment" name="comment" placeholder="Пожелания, продукты, которые не любишь" maxlength="500"></textarea></div><div class="form-note">Это демоверсия. Данные не отправляются на кухню, заказ и доставка не оформляются. Можно скачать черновик.</div><button class="button button-full" type="submit">Подготовить заказ ${icon("check")}</button><p class="small-note">Данные остаются только в текущей вкладке. Оплата не требуется.</p></form>`;
   const phone = $("#order-phone");
   phone.addEventListener("input", () => {
     phone.setCustomValidity("");
@@ -497,7 +482,7 @@ function renderOrder() {
       year: "numeric",
       timeZone: "Asia/Almaty",
     }).format(new Date(`${firstDay}T12:00:00+05:00`));
-    preparedOrder = `HEALTH FOOD — ЧЕРНОВИК ЗАКАЗА\n\nПрограмма: ${plan.name}\nКалорийность: ${plan.kcal}\nПериод: ${daysText(state.duration)}\nСтоимость за день: ${money(plan.price)}\nВсего: ${money(plan.price * state.duration)}\nДоставка: включена\nПервый день: ${dateLabel}\nВремя: ${values.get("time")}\n\nИмя: ${name}\nТелефон: ${values.get("phone").trim()}\nАдрес: Алматы, ${address}\nПожелания: ${values.get("comment").trim() || "Нет"}\n\nДемонстрационный черновик. Заказ не отправлен и не подтверждён. Цены и условия нужно согласовать с сервисом.`;
+    preparedOrder = `HEALTH FOOD — ЧЕРНОВИК ЗАКАЗА\n\nПрограмма: ${plan.name}\nКалорийность: ${plan.kcal}\nПериод: ${daysText(state.duration)}\nСтоимость за день: от ${money(plan.price)}\nВсего: от ${money(plan.price * state.duration)}\nДоставка: включена\nПервый день: ${dateLabel}\nВремя: ${values.get("time")}\n\nИмя: ${name}\nТелефон: ${values.get("phone").trim()}\nАдрес: Алматы, ${address}\nПожелания: ${values.get("comment").trim() || "Нет"}\n\nДемонстрационный черновик. Заказ не отправлен и не подтверждён. Цены и условия нужно согласовать с сервисом.`;
     $("#order-content").innerHTML =
       `<div class="result-icon">${icon("check")}</div><span class="eyebrow">Всё собрано</span><h2 id="order-title">Твой план готов!</h2><p id="order-greeting"></p><pre class="prepared-order" id="prepared-order"></pre><div class="result-actions"><button class="button button-full" id="download-order">Скачать черновик</button><button class="button button-outline button-full" id="copy-order">Скопировать детали</button></div><p class="small-note" style="margin-top:17px">Это черновик: он не отправлен в Health Food. Реальный заказ нужно согласовать с сервисом отдельно.</p>`;
     $("#order-greeting").textContent =
@@ -546,10 +531,12 @@ async function copyOrder() {
 }
 $$("[data-order]").forEach((button) =>
   button.addEventListener("click", () => {
-    if (button.closest(".final-cta")) {
+    if (button.dataset.orderProgram) state.program = button.dataset.orderProgram;
+    if (button.hasAttribute("data-trial")) {
       state.duration = 1;
       updatePlan();
     }
+    updatePlan();
     renderOrder();
     openModal($("#order-dialog"));
   }),
@@ -589,7 +576,7 @@ document.addEventListener("keydown", (event) => {
     $(".menu-toggle").focus();
   }
 });
-window.matchMedia("(min-width: 761px)").addEventListener("change", (event) => {
+window.matchMedia("(min-width: 801px)").addEventListener("change", (event) => {
   if (event.matches) closeMobileMenu();
 });
 $("#current-year").textContent = new Intl.DateTimeFormat("en", {
@@ -598,3 +585,23 @@ $("#current-year").textContent = new Intl.DateTimeFormat("en", {
 }).format(new Date());
 renderMenu();
 updatePlan();
+
+const videoDialog = $("#video-dialog");
+$$("[data-video]").forEach(button => {
+  button.addEventListener("click", () => {
+    const videoId = button.dataset.video;
+    if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) return;
+    const title = button.dataset.videoTitle || "Видео Health Food";
+    $("#video-title").textContent = title;
+    const frame = document.createElement("iframe");
+    frame.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+    frame.title = title;
+    frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    $("#video-content").replaceChildren(frame);
+    $("#video-external").href = `https://www.youtube.com/watch?v=${videoId}`;
+    openModal(videoDialog);
+  });
+});
+videoDialog.addEventListener("close", () => $("#video-content").replaceChildren());
