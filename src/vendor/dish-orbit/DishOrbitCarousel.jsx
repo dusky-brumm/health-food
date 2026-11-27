@@ -161,6 +161,7 @@ export default function DishOrbitCarousel({
     Et = React.useRef(-1),
     vt = React.useRef(1),
     dt = React.useRef(null),
+    pendingSelection = React.useRef(null),
     C = React.useRef(!1),
     q = React.useRef(null);
   (React.useLayoutEffect(() => {
@@ -180,8 +181,11 @@ export default function DishOrbitCarousel({
         F = named(() => {
           C.current = K.matches;
           if (K.matches && dt.current) {
+            const pending = pendingSelection.current;
+            pendingSelection.current = null;
             dt.current.progress(1).kill();
             dt.current = null;
+            if (pending) et(pending.index, pending.direction);
           }
         }, "on");
       return (
@@ -249,6 +253,11 @@ export default function DishOrbitCarousel({
         ve = gsap.timeline({
           onComplete: named(() => {
             dt.current = null;
+            const pending = pendingSelection.current;
+            pendingSelection.current = null;
+            if (pending && pending.index !== _.current) {
+              et(pending.index, pending.direction);
+            }
           }, "onComplete"),
         });
       ((dt.current = ve),
@@ -410,7 +419,15 @@ export default function DishOrbitCarousel({
   const b = named((K, F) => {
       if (g < 2) return;
       const gt = wrapIndex(K, g);
-      if (gt === y) return;
+      if (gt === _.current) {
+        pendingSelection.current = null;
+        return;
+      }
+      const direction = F ?? stepDirection(_.current, gt, g);
+      if (dt.current) {
+        pendingSelection.current = { index: gt, direction };
+        return;
+      }
       const Mt = L.current,
         wt = Mt ? Mt.scroll() : 0;
       if (Mt && wt >= Mt.start - 1 && wt <= Mt.end + 1) {
@@ -418,9 +435,9 @@ export default function DishOrbitCarousel({
         ((B.current = Vt),
           Mt.scroll(Mt.start + ((Mt.end - Mt.start) * Vt) / ct));
       }
-      et(gt, F ?? stepDirection(y, gt, g));
+      et(gt, direction);
     }, "go"),
-    G = named((K) => b(y + K, K), "step"),
+    G = named((K) => b((pendingSelection.current?.index ?? _.current) + K, K), "step"),
     lt = named((K) => {
       K.key === "ArrowRight"
         ? (K.preventDefault(), G(1))
@@ -671,7 +688,7 @@ export default function DishOrbitCarousel({
                   role: "tabpanel",
                   "aria-labelledby": detailsId + "-" + S,
                   children: p.map((K, F) => {
-                    var gt;
+                    const showIngredients = S === "ingredients" && Boolean(K.ingredients?.length);
                     return jsxRuntime.jsxs(
                       "div",
                       {
@@ -711,18 +728,23 @@ export default function DishOrbitCarousel({
                             className: "dsh-kit",
                             children: K.kitchen ?? " ",
                           }),
-                          S === "overview" ||
-                          !((gt = K.ingredients) != null && gt.length)
-                            ? jsxRuntime.jsx("p", {
+                          jsxRuntime.jsxs("div", {
+                            className: "dsh-copy",
+                            children: [
+                              jsxRuntime.jsx("p", {
                                 className: "dsh-desc",
+                                "aria-hidden": showIngredients,
                                 children: K.description,
-                              })
-                            : jsxRuntime.jsx("ul", {
+                              }),
+                              jsxRuntime.jsx("ul", {
                                 className: "dsh-ing",
-                                children: K.ingredients.map((Mt) =>
+                                "aria-hidden": !showIngredients,
+                                children: (K.ingredients ?? []).map((Mt) =>
                                   jsxRuntime.jsx("li", { children: Mt }, Mt),
                                 ),
                               }),
+                            ],
+                          }),
                           jsxRuntime.jsxs("div", {
                             className: "dsh-react",
                             children: [

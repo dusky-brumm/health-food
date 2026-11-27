@@ -78,6 +78,15 @@
 .dish-orbit-host .dsh-desc {
   min-height: 72px;
 }
+.dish-orbit-host .dsh-copy {
+  display: grid;
+}
+.dish-orbit-host .dsh-copy > * {
+  grid-area: 1 / 1;
+}
+.dish-orbit-host .dsh-copy > [aria-hidden="true"] {
+  visibility: hidden;
+}
 @media (min-width: 960px) and (max-width: 1000px) {
   .dish-orbit-host {
     --orbit-top: 85px;
@@ -119,10 +128,5 @@
   .dish-orbit-host .dsh-dot {
     min-width: 28px;
     min-height: 20px;
-  }
-}
-@media (min-width: 960px) and (prefers-reduced-motion: no-preference) {
-  .dish-orbit-host:not([data-ready="true"]):not(.orbit-failed) {
-    min-height: calc(var(--orbit-height) * 3.8);
   }
 }

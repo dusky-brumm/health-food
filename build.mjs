@@ -1,4 +1,4 @@
-import { readFile, access, copyFile, writeFile, readdir, stat } from "node:fs/promises";
+import { readFile, access, copyFile, writeFile, readdir, stat, mkdir } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +10,11 @@ if (!/^\/(?:[a-zA-Z0-9_-]+\/)*$/.test(rawBase)) throw new Error("SITE_BASE_PATH 
 await import("./src/render-pages.mjs");
 await copyFile(path.join(root, "src/app.js"), path.join(root, "dist/app.js"));
 await copyFile(path.join(root, "src/site.css"), path.join(root, "dist/site.css"));
+await mkdir(path.join(root, "dist/assets/plates"), { recursive: true });
+for (const name of ["salmon.webp", "ribeye.webp", "sea-bass.webp"]) {
+  await copyFile(path.join(root, "src/vendor/dish-orbit/assets", name), path.join(root, "dist/assets/plates", name));
+}
+await copyFile(path.join(root, "src/vendor/dish-orbit/assets/dish-font.woff2"), path.join(root, "dist/assets/outfit-latin.woff2"));
 await writeFile(path.join(root, "dist/site-meta.json"), JSON.stringify({ basePath: rawBase }));
 await writeFile(path.join(root, "dist/.nojekyll"), "");
 const orbitBuild = await build({

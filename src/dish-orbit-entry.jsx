@@ -8,32 +8,25 @@ function OrbitSection({ host, onPrograms, onWeeklyMenu }) {
   const [compact, setCompact] = React.useState(
     () => window.matchMedia("(max-width: 959px)").matches,
   );
-  const [reducedMotion, setReducedMotion] = React.useState(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
 
   React.useEffect(() => {
     const compactQuery = window.matchMedia("(max-width: 959px)");
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const updateCompact = () => setCompact(compactQuery.matches);
-    const updateMotion = () => setReducedMotion(motionQuery.matches);
     compactQuery.addEventListener("change", updateCompact);
-    motionQuery.addEventListener("change", updateMotion);
     host.setAttribute("aria-busy", "false");
     host.dataset.ready = "true";
     return () => {
       compactQuery.removeEventListener("change", updateCompact);
-      motionQuery.removeEventListener("change", updateMotion);
     };
   }, [host]);
 
   return (
-    <div className={compact || reducedMotion ? "orbit-static" : "orbit-scroll"}>
+    <div className="orbit-static">
       <DishOrbitCarousel
         dishes={dishes}
         backdrop={backdrop}
-        loop={false}
-        scrollDriven={!compact && !reducedMotion}
+        loop
+        scrollDriven={false}
         height={compact ? "auto" : "var(--orbit-height)"}
         onPlay={onWeeklyMenu}
         onOrder={onPrograms}
