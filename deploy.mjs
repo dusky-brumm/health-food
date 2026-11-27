@@ -9,7 +9,7 @@ function run(command, args, cwd = root, extra = {}) {
   const result = spawnSync(command, args, { cwd, encoding: "utf8", ...extra });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(result.stderr || result.stdout || `${command} failed`);
-  return result.stdout.trim();
+  return (result.stdout || "").trim();
 }
 const remote = run("git", ["remote", "get-url", "origin"]);
 const match = remote.match(/github\.com[:/]([\w.-]+)\/([\w.-]+?)(?:\.git)?$/);
