@@ -294,7 +294,7 @@ $("#day-menu").addEventListener("click", (event) => {
 const quiz = { step: 0, goal: null, format: null, duration: null };
 const quizSteps = [
   {
-    title: "Какая у тебя цель?",
+    title: "Какая у вас цель?",
     description: "Начнём с главного. Что хочется добавить в свою жизнь?",
     key: "goal",
     options: [
@@ -319,7 +319,7 @@ const quizSteps = [
     ],
   },
   {
-    title: "Что для тебя важнее?",
+    title: "Что для вас важнее?",
     description: "Так мы поймём, с чего начать знакомство с рационом.",
     key: "format",
     options: [
@@ -331,7 +331,7 @@ const quizSteps = [
   {
     title: "На сколько дней планируем?",
     description:
-      "Можно начать с одного дня и посмотреть, подходит ли тебе формат.",
+      "Можно начать с одного дня и посмотреть, подходит ли вам формат.",
     key: "duration",
     options: [
       {
@@ -365,12 +365,12 @@ function renderQuiz() {
   if (quiz.step === 3) {
     const plan = plans[quiz.goal];
     const preferences = {
-      taste: "Тебе важно разнообразие — начни со знакомства с меню по дням.",
+      taste: "Вам важно разнообразие — начните со знакомства с меню по дням.",
       time: "Готовый рацион освободит время от покупок и приготовления еды.",
       routine: "Готовые порции помогут организовать приёмы пищи в течение дня.",
     };
     $("#quiz-content").innerHTML =
-      `${progress}<div class="result-icon">${icon("leaf")}</div><span class="eyebrow">Есть идея для твоего ритма</span><h2 id="quiz-title">Давай начнём с «${plan.name}»</h2><p>${preferences[quiz.format]}</p><div class="quiz-result-card"><strong>${plan.name}</strong><p>${plan.kcal} · ${plan.meals}<br>${money(plan.price)} / день · ${daysText(Number(quiz.duration))}<br>Всего ${money(plan.price * Number(quiz.duration))}</p></div><p class="small-note">Это подбор по предпочтениям, а не расчёт индивидуальной потребности в калориях. Калорийность и ограничения можно согласовать со специалистом.</p><button class="button button-full" id="apply-quiz">Выбрать эту программу</button><div class="quiz-actions"><button class="quiz-back" id="quiz-back">Вернуться к ответам</button></div>`;
+      `${progress}<div class="result-icon">${icon("leaf")}</div><span class="eyebrow">Есть идея для вашего ритма</span><h2 id="quiz-title">Вам подойдёт программа «${plan.name}»</h2><p>${preferences[quiz.format]}</p><div class="quiz-result-card"><strong>${plan.name}</strong><p>${plan.kcal} · ${plan.meals}<br>${money(plan.price)} / день · ${daysText(Number(quiz.duration))}<br>Всего ${money(plan.price * Number(quiz.duration))}</p></div><p class="small-note">Это подбор по предпочтениям, а не расчёт индивидуальной потребности в калориях. Калорийность и ограничения можно согласовать со специалистом.</p><button class="button button-full" id="apply-quiz">Выбрать эту программу</button><div class="quiz-actions"><button class="quiz-back" id="quiz-back">Вернуться к ответам</button></div>`;
     $("#apply-quiz").addEventListener("click", () => {
       if (document.body.dataset.activeProgram !== quiz.goal) {
         window.location.assign(new URL(`programs/${plan.slug}/?days=${quiz.duration}#programs`, siteRoot));
@@ -386,7 +386,7 @@ function renderQuiz() {
   } else {
     const step = quizSteps[quiz.step];
     $("#quiz-content").innerHTML =
-      `${progress}<span class="eyebrow">Подбираем твою программу</span><h2 id="quiz-title">${step.title}</h2><p>${step.description}</p><div class="quiz-options" role="group" aria-label="${step.title}">${step.options.map((option) => `<button class="quiz-option ${quiz[step.key] === option.value ? "is-selected" : ""}" data-answer="${option.value}" aria-pressed="${quiz[step.key] === option.value}">${icon(option.icon)}<span>${option.title}</span>${option.caption ? `<span>${option.caption}</span>` : ""}</button>`).join("")}</div><div class="quiz-actions">${quiz.step ? '<button class="quiz-back" id="quiz-back">Назад</button>' : '<span class="small-note">Три простых вопроса</span>'}<button class="button" id="quiz-next" ${quiz[step.key] ? "" : "disabled"}>${quiz.step === 2 ? "Посмотреть результат" : "Продолжить"}</button></div>`;
+      `${progress}<span class="eyebrow">Подбор программы</span><h2 id="quiz-title">${step.title}</h2><p>${step.description}</p><div class="quiz-options" role="group" aria-label="${step.title}">${step.options.map((option) => `<button class="quiz-option ${quiz[step.key] === option.value ? "is-selected" : ""}" data-answer="${option.value}" aria-pressed="${quiz[step.key] === option.value}">${icon(option.icon)}<span>${option.title}</span>${option.caption ? `<span>${option.caption}</span>` : ""}</button>`).join("")}</div><div class="quiz-actions">${quiz.step ? '<button class="quiz-back" id="quiz-back">Назад</button>' : '<span class="small-note">Три простых вопроса</span>'}<button class="button" id="quiz-next" ${quiz[step.key] ? "" : "disabled"}>${quiz.step === 2 ? "Посмотреть результат" : "Продолжить"}</button></div>`;
     $$("[data-answer]", $("#quiz-content")).forEach((button) =>
       button.addEventListener("click", () => {
         quiz[step.key] = button.dataset.answer;
@@ -436,7 +436,7 @@ function renderOrder() {
   const plan = plans[state.program];
   const date = earliestDate();
   $("#order-content").innerHTML =
-    `<span class="eyebrow">Хорошее начало</span><h2 id="order-title">Твой вкусный план</h2><p>Собери черновик заказа. Проверь детали — и сохрани его себе.</p><div class="order-summary"><div><strong>${plan.name} · ${daysText(state.duration)}</strong><span>${plan.kcal} · доставка включена</span></div><strong>от ${money(plan.price * state.duration)}</strong></div><form class="order-form" id="order-form"><div class="field-row"><div class="field"><label for="order-name">Как тебя зовут</label><input id="order-name" name="name" autocomplete="given-name" placeholder="Имя" required maxlength="60"></div><div class="field"><label for="order-phone">Телефон</label><input id="order-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required maxlength="25" aria-describedby="phone-error"><span class="form-error" id="phone-error" aria-live="polite" hidden>Укажи номер из 11 цифр, начинающийся с +7 или 8.</span></div></div><div class="field"><label for="order-address">Адрес доставки в Алматы</label><input id="order-address" name="address" autocomplete="street-address" placeholder="Улица, дом, квартира" required maxlength="200"></div><div class="field-row"><div class="field"><label for="order-date">Первый день питания</label><input id="order-date" name="date" type="date" min="${date}" value="${date}" required></div><div class="field"><label for="order-time">Время доставки</label><select id="order-time" name="time"><option>06:00–08:00</option><option>08:00–10:00</option></select></div></div><div class="field"><label for="order-comment">Что нужно учесть <span class="optional-label">(необязательно)</span></label><textarea id="order-comment" name="comment" placeholder="Пожелания, продукты, которые не любишь" maxlength="500"></textarea></div><div class="form-note">Это демоверсия. Данные не отправляются на кухню, заказ и доставка не оформляются. Можно скачать черновик.</div><button class="button button-full" type="submit">Подготовить заказ ${icon("check")}</button><p class="small-note">Данные остаются только в текущей вкладке. Оплата не требуется.</p></form>`;
+    `<span class="eyebrow">Хорошее начало</span><h2 id="order-title">Выбранная программа</h2><p>Укажите данные и сохраните черновик заявки.</p><div class="order-summary"><div><strong>${plan.name} · ${daysText(state.duration)}</strong><span>${plan.kcal} · доставка включена</span></div><strong>от ${money(plan.price * state.duration)}</strong></div><form class="order-form" id="order-form"><div class="field-row"><div class="field"><label for="order-name">Ваше имя</label><input id="order-name" name="name" autocomplete="given-name" placeholder="Имя" required maxlength="60"></div><div class="field"><label for="order-phone">Телефон</label><input id="order-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required maxlength="25" aria-describedby="phone-error"><span class="form-error" id="phone-error" aria-live="polite" hidden>Укажите номер из 11 цифр, начинающийся с +7 или 8.</span></div></div><div class="field"><label for="order-address">Адрес доставки в Алматы</label><input id="order-address" name="address" autocomplete="street-address" placeholder="Улица, дом, квартира" required maxlength="200"></div><div class="field-row"><div class="field"><label for="order-date">Первый день питания</label><input id="order-date" name="date" type="date" min="${date}" value="${date}" required></div><div class="field"><label for="order-time">Время доставки</label><select id="order-time" name="time"><option>06:00–08:00</option><option>08:00–10:00</option></select></div></div><div class="field"><label for="order-comment">Что нужно учесть <span class="optional-label">(необязательно)</span></label><textarea id="order-comment" name="comment" placeholder="Пожелания, продукты, которые не любите" maxlength="500"></textarea></div><div class="form-note">Это демоверсия. Данные не отправляются на кухню, заказ и доставка не оформляются. Можно скачать черновик.</div><button class="button button-full" type="submit">Подготовить заказ ${icon("check")}</button><p class="small-note">Данные остаются только в текущей вкладке. Оплата не требуется.</p></form>`;
   const phone = $("#order-phone");
   phone.addEventListener("input", () => {
     phone.setCustomValidity("");
@@ -456,7 +456,7 @@ function renderOrder() {
     const firstDay = values.get("date");
     const startInput = $("#order-date");
     if (firstDay < earliestDate()) {
-      startInput.setCustomValidity("Выбери дату не раньше завтрашнего дня.");
+      startInput.setCustomValidity("Выберите дату не раньше завтрашнего дня.");
       startInput.reportValidity();
       startInput.addEventListener(
         "input",
@@ -469,7 +469,7 @@ function renderOrder() {
     const address = values.get("address").trim();
     if (!name || !address) {
       const input = !name ? $("#order-name") : $("#order-address");
-      input.setCustomValidity("Пожалуйста, заполни это поле.");
+      input.setCustomValidity("Пожалуйста, заполните это поле.");
       input.reportValidity();
       input.addEventListener("input", () => input.setCustomValidity(""), {
         once: true,
@@ -484,9 +484,9 @@ function renderOrder() {
     }).format(new Date(`${firstDay}T12:00:00+05:00`));
     preparedOrder = `HEALTH FOOD — ЧЕРНОВИК ЗАКАЗА\n\nПрограмма: ${plan.name}\nКалорийность: ${plan.kcal}\nПериод: ${daysText(state.duration)}\nСтоимость за день: от ${money(plan.price)}\nВсего: от ${money(plan.price * state.duration)}\nДоставка: включена\nПервый день: ${dateLabel}\nВремя: ${values.get("time")}\n\nИмя: ${name}\nТелефон: ${values.get("phone").trim()}\nАдрес: Алматы, ${address}\nПожелания: ${values.get("comment").trim() || "Нет"}\n\nДемонстрационный черновик. Заказ не отправлен и не подтверждён. Цены и условия нужно согласовать с сервисом.`;
     $("#order-content").innerHTML =
-      `<div class="result-icon">${icon("check")}</div><span class="eyebrow">Всё собрано</span><h2 id="order-title">Твой план готов!</h2><p id="order-greeting"></p><pre class="prepared-order" id="prepared-order"></pre><div class="result-actions"><button class="button button-full" id="download-order">Скачать черновик</button><button class="button button-outline button-full" id="copy-order">Скопировать детали</button></div><p class="small-note" style="margin-top:17px">Это черновик: он не отправлен в Health Food. Реальный заказ нужно согласовать с сервисом отдельно.</p>`;
+      `<div class="result-icon">${icon("check")}</div><span class="eyebrow">Всё собрано</span><h2 id="order-title">Черновик заявки готов</h2><p id="order-greeting"></p><pre class="prepared-order" id="prepared-order"></pre><div class="result-actions"><button class="button button-full" id="download-order">Скачать черновик</button><button class="button button-outline button-full" id="copy-order">Скопировать детали</button></div><p class="small-note" style="margin-top:17px">Это черновик: он не отправлен в Health Food. Реальный заказ нужно согласовать с сервисом отдельно.</p>`;
     $("#order-greeting").textContent =
-      `${name}, вот детали твоего рациона. Сохрани их, чтобы вернуться к выбору позже.`;
+      `${name}, вот детали вашего рациона. Сохраните их, чтобы вернуться к выбору позже.`;
     $("#prepared-order").textContent = preparedOrder;
     $("#download-order").addEventListener("click", downloadOrder);
     $("#copy-order").addEventListener("click", copyOrder);
@@ -500,7 +500,7 @@ function validatePhone(input) {
   const digits = input.value.replace(/\D/g, "");
   const valid = digits.length === 11 && /^[78]/.test(digits);
   input.setCustomValidity(
-    valid ? "" : "Укажи телефон из 11 цифр, начинающийся с +7 или 8.",
+    valid ? "" : "Укажите телефон из 11 цифр, начинающийся с +7 или 8.",
   );
   input.setAttribute("aria-invalid", String(!valid));
   $("#phone-error").hidden = valid || !input.value;
@@ -526,7 +526,7 @@ async function copyOrder() {
     range.selectNodeContents($("#prepared-order"));
     selection.removeAllRanges();
     selection.addRange(range);
-    $("#copy-order").textContent = "Текст выделен — нажми Ctrl+C";
+    $("#copy-order").textContent = "Текст выделен — нажмите Ctrl+C";
   }
 }
 $$("[data-order]").forEach((button) =>
