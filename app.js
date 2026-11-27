@@ -84,6 +84,9 @@ function updatePlan() {
     element.textContent = money(plans[element.dataset.planTotal].price * state.duration);
   });
   $$("[data-plan-days]").forEach(element => element.textContent = daysText(state.duration));
+  $$("[data-multiday]").forEach(element => {
+    element.hidden = state.duration === 1;
+  });
   $$("[data-program-detail]").forEach(link => {
     const plan = plans[link.dataset.programDetail];
     link.href = new URL(`programs/${plan.slug}/?days=${state.duration}`, siteRoot).href;
